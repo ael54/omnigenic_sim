@@ -1,0 +1,2 @@
+rep	snp	allele	chr	pos	cm	maf
+1	ss196486186	G/A	8	118693913	NA	0.45
