@@ -20,7 +20,7 @@ source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
 ################################################################################
 #Simulate a founder population
 this.nChr <- 5
-this.nQtl <- 1000 #I am not going to have QTLs here because simplePHENOTYPES will 
+this.nQtl <- 50 #I am not going to have QTLs here because simplePHENOTYPES will 
                # the SNPs as QTLs (which we call QTNs)
 this.nSnp <- 1000
 this.Ne <- 30
@@ -99,7 +99,7 @@ the.founders <- newPop(founderPop)
 #Initialize the parameters for simulating the omnigenic genetic architecture the function
 
 source("Simulating_Omnigenic_Genetic_Architecture/setInputParametersforSimplePhentoypes.R")
-this.input.SNPs <- hapmap.file.of.founder.SNPs
+this.input.SNPs <- hapmap.file.of.founder.QTLs
 
 
 #Run the function that will conduct the simulations
