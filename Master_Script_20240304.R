@@ -5,7 +5,7 @@
 rm(list = ls())
 
 #Set the working directory
-setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/")
+setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project")
 home.dir <- getwd()
 
 #Open all libraries
@@ -19,34 +19,65 @@ source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
 ################################################################################
 ################################################################################
 #Simulate a founder population
-this.nChr <- 2
-this.nQtl <- 0 #I am not going to have QTLs here because simplePHENOTYPES will 
+this.nChr <- 5
+this.nQtl <- 1000 #I am not going to have QTLs here because simplePHENOTYPES will 
                # the SNPs as QTLs (which we call QTNs)
-this.nSnp <- 250
-this.nInd <- 300
-this.nSelect <- 25 
-this.nCross <- 200 
-this.nGenerations <- 5
+this.nSnp <- 1000
+this.Ne <- 30
+this.nInd <- 300 #300 is probably too small to be realistic
+this.histNe.vector <- c(100, 100000, 1000000) 
+this.histGen.vector <- c(100, 1000, 10000)
+this.split <- NULL
+this.nSelect <- 25 #25 is probably too small to be realistic 
+this.nCross <- 200 #200 is probably too small to be realistic
+this.nGenerations <- 5 #5 is probably too small to be realistic
 
 #The comments below are paraphrased from the AlphaSim demos
 
 #Create a founder population
-founderPop = runMacs(nInd = this.nInd,
+
+founderPop = runMacs2(nInd = this.nInd,
                      nChr = this.nChr,
                      segSites = this.nQtl +this.nSnp,
-                     inbred = TRUE,
-                     species = "MAIZE")
+                     Ne = this.Ne,
+                     histNe = this.histNe.vector,
+                     histGen = this.histGen.vector,
+                     split = this.split,
+                     inbred = TRUE)
 
 #Set population parameters
 SP = SimParam$new(founderPop)
 
 
 #Add a SNP chip
-SP$addSnpChip(nSnpPerChr = this.nSnp/this.nChr)
+# Add SNP chip
+SP$restrSegSites(this.nQtl, this.nSnp)
+if (nSnp > 0) {
+  SP$addSnpChip(nSnpPerChr = this.nSnp/this.nChr)
+}
+#SP$addSnpChip()
+##############Begin temporary code to get QTLs. Ask for help; 
+#Add a dummy trait that is not actually used. I am using the same
+# starting values as Bancic et al. (2023) because I am not actually going
+# to use this trait
+SP$addTraitA(nQtlPerChr = this.nQtl,
+             mean       = 1,
+             var        = 1)
 
 
-#Obtain the founder population
-the.founders <- newPop(founderPop)
+#New code by Alex - get the QTLs
+this.QTL.Map <- getQtlMap(trait = 1, simParam = SP)
+these.QTL.Genotypes <- pullQtlGeno(pop=founderPop, trait = 1, asRaw = FALSE, 
+                                   simParam = SP)
+
+
+the.physical.map.of.QTLs <- getQtlMap(trait = 1, simParam = SP)
+
+#Prepare everything for reading into simplePHENOTYPES
+hapmap.file.of.founder.QTLs <- get.me.my.SNPs.in.hapmap.format(these.SNPs = these.QTL.Genotypes,
+                                                               this.physical.map = this.QTL.Map)
+
+
 
 #Get your SNPs
 the.founder.SNPs <- pullSnpGeno(the.founders, simParam = SP)
@@ -59,11 +90,10 @@ the.physical.map.of.SNPs <- getSnpMap(snpChip = 1, simParam = SP)
 hapmap.file.of.founder.SNPs <- get.me.my.SNPs.in.hapmap.format(these.SNPs = the.founder.SNPs,
                                 this.physical.map = the.physical.map.of.SNPs)
 
+####This creates the founder population, which is necessary for simulating traits.
+the.founders <- newPop(founderPop)
 
- 
 
-################################################################################
-################################################################################
 #Simulate an initial genetic architecture in the founder population
 
 #Initialize the parameters for simulating the omnigenic genetic architecture the function
