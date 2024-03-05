@@ -2,13 +2,14 @@
 ##############################################
 ##############################################  
 #Created by Alex Lipka on February 21, 2024. This
-# Uses funcitons and objects available in AlphaSimR and simplePHENTOYPES
+# Uses functions and objects available in AlphaSimR and simplePHENTOYPES
 
 cross.stuff.for.a.whole.bunch.of.generations <- function(current.generation = NULL,
                                           type.of.selection = NULL,
                                           nSelect = NULL,
                                           nCross = NULL,
                                           nGenerations = NULL,
+                                          nQtl = NULL,
                                           SP.within.function = NULL){
   
     for(i in 1:nGenerations){  
@@ -38,17 +39,27 @@ cross.stuff.for.a.whole.bunch.of.generations <- function(current.generation = NU
       the.next.gen = randCross(selected.inds.current.generation, 
                                              this.nCross, simParam=SP.within.function)
       
+   
+      
+
+      #Get the QTLs
+      the.next.genQTL.Genotypes <- pullQtlGeno(pop=founderPop, trait = 1, asRaw = FALSE, 
+                                                                      simParam = SP.within.function)
+      
+      
+      #Format the QTLs so that they can be read into simplePHENOTYPES
+      this.input.QTLs <- get.me.my.SNPs.in.hapmap.format(these.SNPs = the.next.genQTL.Genotypes,
+                                                                     this.physical.map = this.QTL.Map)
+      
       #Simulate traits with the same QTNs and effect sizes for each generation
       #Get your SNPs
       the.next.genSNPs <- pullSnpGeno(the.next.gen, simParam = SP.within.function)
       
-      #Prepare everything for reading into simplePHENOTYPES
-      this.input.SNPs <- get.me.my.SNPs.in.hapmap.format(these.SNPs =  the.next.genSNPs,
-                                               this.physical.map = the.physical.map.of.SNPs)
+     
       
       #The remaining parameters have been updated already when the founder population was started
       
-      this.simulated.trait.within.function <- simulate.omnigenic.architecture(input.SNPs = this.input.SNPs,
+      this.simulated.trait.within.function <- simulate.omnigenic.architecture(input.SNPs = this.input.QTLs,
                                                                      number.of.trait.reps = this.number.of.trait.reps,
                                                                      broad.sense.H2 = this.broad.sense.H2,
                                                                      number.of.core.genes = this.number.of.core.genes,
@@ -76,4 +87,4 @@ cross.stuff.for.a.whole.bunch.of.generations <- function(current.generation = NU
   
   return(current.generation)
 
-} #end do.a.whole.bunch.of.crosses
+} #end cross.stuff.for.a.whole.bunch.of.generations

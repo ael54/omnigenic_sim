@@ -20,9 +20,8 @@ source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
 ################################################################################
 #Simulate a founder population
 this.nChr <- 5
-this.nQtl <- 50 #I am not going to have QTLs here because simplePHENOTYPES will 
-               # the SNPs as QTLs (which we call QTNs)
-this.nSnp <- 1000
+this.nQtl <- 50  # This is actually the number of QTLs per chromosome
+this.nSnp <- 1000 # This is the total number of SNPs across the genome
 this.Ne <- 30
 this.nInd <- 300 #300 is probably too small to be realistic
 this.histNe.vector <- c(100, 100000, 1000000) 
@@ -55,17 +54,17 @@ SP$restrSegSites(this.nQtl, this.nSnp)
 if (nSnp > 0) {
   SP$addSnpChip(nSnpPerChr = this.nSnp/this.nChr)
 }
-#SP$addSnpChip()
-##############Begin temporary code to get QTLs. Ask for help; 
-#Add a dummy trait that is not actually used. I am using the same
-# starting values as Bancic et al. (2023) because I am not actually going
-# to use this trait
+
+
+#Add a dummy trait that is not actually used. This will let us pass the 
+# QTLs to simplePHENOTYPES, and we can run downstream analysis on SNPs
+# instead of QTLs
 SP$addTraitA(nQtlPerChr = this.nQtl,
              mean       = 1,
              var        = 1)
 
 
-#New code by Alex - get the QTLs
+#Get the QTLs
 this.QTL.Map <- getQtlMap(trait = 1, simParam = SP)
 these.QTL.Genotypes <- pullQtlGeno(pop=founderPop, trait = 1, asRaw = FALSE, 
                                    simParam = SP)
@@ -73,7 +72,7 @@ these.QTL.Genotypes <- pullQtlGeno(pop=founderPop, trait = 1, asRaw = FALSE,
 
 the.physical.map.of.QTLs <- getQtlMap(trait = 1, simParam = SP)
 
-#Prepare everything for reading into simplePHENOTYPES
+#Format the QTLs for reading into simplePHENOTYPES
 hapmap.file.of.founder.QTLs <- get.me.my.SNPs.in.hapmap.format(these.SNPs = these.QTL.Genotypes,
                                                                this.physical.map = this.QTL.Map)
 
@@ -137,6 +136,7 @@ directional.selection.population <- cross.stuff.for.a.whole.bunch.of.generations
   nSelect = this.nSelect,
   nCross = this.nCross,
   nGenerations = this.nGenerations,
+  nQtl = this.nQtl,
   SP.within.function = SP
 )
  
@@ -148,6 +148,7 @@ disruptive.selection.population <- cross.stuff.for.a.whole.bunch.of.generations(
   nSelect = this.nSelect,
   nCross = this.nCross,
   nGenerations = this.nGenerations,
+  nQtl = this.nQtl,
   SP.within.function = SP
 )
 
@@ -159,6 +160,7 @@ stabilizing.selection.population <- cross.stuff.for.a.whole.bunch.of.generations
   nSelect = this.nSelect,
   nCross = this.nCross,
   nGenerations = this.nGenerations,
+  nQtl = this.nQtl,
   SP.within.function = SP
 )
 
@@ -195,4 +197,4 @@ combined.subpopulation.trait <- rbind(directional.subpopulation.trait,
 
 
 ###Save the R workspace
-save.image("Test_Run_small_data_set_20240223.Rdata")
+save.image("Test_Run_small_data_set_20240305.Rdata")
