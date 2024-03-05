@@ -29,7 +29,7 @@ this.histGen.vector <- c(100, 1000, 10000)
 this.split <- NULL
 this.nSelect <- 25 #25 is probably too small to be realistic 
 this.nCross <- 200 #200 is probably too small to be realistic
-this.nGenerations <- 5 #5 is probably too small to be realistic
+this.nGenerations <- 1 #5 is probably too small to be realistic
 
 #The comments below are paraphrased from the AlphaSim demos
 
@@ -181,6 +181,7 @@ combined.subpopulation.SNPs <- rbind(directional.subpopulation.SNPs,
 
 
 #Merge the trait data together from the three different subpopulations
+#####The code below is not working...fix it
 directional.subpopulation.trait <- directional.selection.population@pheno
 row.names(directional.subpopulation.trait) = row.names(directional.subpopulation.SNPs)
 

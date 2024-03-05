@@ -43,7 +43,7 @@ cross.stuff.for.a.whole.bunch.of.generations <- function(current.generation = NU
       
 
       #Get the QTLs
-      the.next.genQTL.Genotypes <- pullQtlGeno(pop=founderPop, trait = 1, asRaw = FALSE, 
+      the.next.genQTL.Genotypes <- pullQtlGeno(pop=the.next.gen, trait = 1, asRaw = FALSE, 
                                                                       simParam = SP.within.function)
       
       
