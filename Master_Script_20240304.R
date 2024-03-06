@@ -23,6 +23,7 @@ this.nChr <- 5
 this.nQtl <- 50  # This is actually the number of QTLs per chromosome
 this.nSnp <- 1000 # This is the total number of SNPs across the genome
 this.Ne <- 30
+this.nParents <- 10
 this.nInd <- 300 #300 is probably too small to be realistic
 this.histNe.vector <- c(100, 100000, 1000000) 
 this.histGen.vector <- c(100, 1000, 10000)
@@ -30,12 +31,38 @@ this.split <- NULL
 this.nSelect <- 25 #25 is probably too small to be realistic 
 this.nCross <- 200 #200 is probably too small to be realistic
 this.nGenerations <- 1 #5 is probably too small to be realistic
+######
+##Input parameters for the burnin phase
+this.varE.during.burnin <- 4
+this.repEYT <- 8
+# Other input parameters for the burnin phase, to be used during the 
+#.  fill in stage
+# ---- Breeding program details ----
+nParents = 50  # Number of parents to start a breeding cycle
+nCrosses = 100 # Number of crosses per year
+nDH      = 100 # DH lines produced per cross
+famMax   = 10  # The maximum number of DH lines per cross to enter PYT
+nPYT     = 500 # Entries per preliminary yield trial
+nAYT     = 50  # Entries per advanced yield trial
+nEYT     = 10  # Entries per elite yield trial
+
 
 #The comments below are paraphrased from the AlphaSim demos
 
+###############################################################################
+###############################################################################
+###############################################################################
 #Create a founder population
-
-founderPop = runMacs2(nInd = this.nInd,
+############## Modification on March 6, 2024. I am going to do 
+### a fill-in and burn-in phase so that we can have genomic
+### properties (e.g., LD) that resemble what we expect to see
+### in a founder population. I am going to use the parameters
+### that were set in Bancic et al. (2023). The rationale is that
+### I (Alex Lipka) am not an expert in this, and I am sure that
+#### these starting parameters were pressure tested.
+#### All of these are based on/use code from "
+###### jbancic_alphasimr_plants/01_LineBreeding/03_TwoPartGS/"
+founderPop = runMacs2(nInd = this.nParents,
                      nChr = this.nChr,
                      segSites = this.nQtl +this.nSnp,
                      Ne = this.Ne,
@@ -47,23 +74,49 @@ founderPop = runMacs2(nInd = this.nInd,
 #Set population parameters
 SP = SimParam$new(founderPop)
 
-
-#Add a SNP chip
 # Add SNP chip
 SP$restrSegSites(this.nQtl, this.nSnp)
-if (nSnp > 0) {
+if (this.nSnp > 0) {
   SP$addSnpChip(nSnpPerChr = this.nSnp/this.nChr)
 }
+
+
+#Simulate a trait. We are not actually going to use this trait for anything
+# once we have a founder population, so I will hard code in the settings
+# from Bancic et al. (2023)
+SP$addTraitAG(nQtlPerChr = this.nQtl,
+              mean       = 1,
+              var        = 1,
+              varEnv     = 1,
+              varGxE     = 4)
+
+# Collect pedigree
+SP$setTrackPed(TRUE)
+
+###This code below is from the wheat example of Bancic et al. (2023)
+# Create founder parents
+Parents = newPop(founderPop)
+
+# Add phenotype reflecting evaluation in EYT
+Parents = setPheno(Parents, varE = this.varE.during.burnin, reps = this.repEYT)
+
+
+
+
+
+
+#Add a SNP chip
 
 
 #Add a dummy trait that is not actually used. This will let us pass the 
 # QTLs to simplePHENOTYPES, and we can run downstream analysis on SNPs
 # instead of QTLs
-SP$addTraitA(nQtlPerChr = this.nQtl,
-             mean       = 1,
-             var        = 1)
 
 
+
+
+
+######### Do this later after you did the burn ins
 #Get the QTLs
 this.QTL.Map <- getQtlMap(trait = 1, simParam = SP)
 these.QTL.Genotypes <- pullQtlGeno(pop=founderPop, trait = 1, asRaw = FALSE, 
