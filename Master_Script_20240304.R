@@ -72,7 +72,7 @@ these.QTL.Genotypes <- pullQtlGeno(pop=founderPop, trait = 1, asRaw = FALSE,
 
 the.physical.map.of.QTLs <- getQtlMap(trait = 1, simParam = SP)
 
-#Format the QTLs for reading into simplePHENOTYPES
+#Format the QTLs for reading into simplePHENOTYPES...aw shucks!
 hapmap.file.of.founder.QTLs <- get.me.my.SNPs.in.hapmap.format(these.SNPs = these.QTL.Genotypes,
                                                                this.physical.map = this.QTL.Map)
 
