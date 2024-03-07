@@ -24,15 +24,15 @@ this.nQtl <- 50  # This is actually the number of QTLs per chromosome
 this.nSnp <- 1000 # This is the total number of SNPs across the genome
 this.Ne <- 30
 this.nParents <- 50
-this.nInd <- 300 #300 is probably too small to be realistic
+#this.nInd <- 300 #This is obsolete because we are using this.nParents instead
 this.histNe.vector <- c(100, 100000, 1000000) 
 this.histGen.vector <- c(100, 1000, 10000)
 this.split <- NULL
-this.nSelect <- 25 #25 is probably too small to be realistic 
-this.nCross <- 100 #200 is probably too small to be realistic
-this.nGenerations <- 1 #5 is probably too small to be realistic
+this.nSelect <- 112 # This is based on selecting 10% of individuals in the training population 
+this.nCross <- 1120 #200 is probably too small to be realistic
+this.nGenerations <- 10 #5 is probably too small to be realistic
 ######
-##Input parameters for the burnin phase
+##Input parameters for the burnin phase. These numbers are based on Bancic et al. (2023)
 this.varE.during.burnin <- 4
 this.repEYT <- 8
 # Other input parameters for the burnin phase, to be used during the 
@@ -204,7 +204,7 @@ this.simulated.trait <- simulate.omnigenic.architecture(input.SNPs = this.input.
                           output.directory.name = this.output.directory.name)
 
 #Put the simulated phentoypes from simplePHNEOTYPES back into AlphaSimR
-the.founders@pheno <- as.matrix(this.simulated.trait$this.simulated.trait[,2])
+TrainPop@pheno <- as.matrix(this.simulated.trait$this.simulated.trait[,2])
   
 ################################################################################
 ################################################################################
@@ -213,8 +213,10 @@ the.founders@pheno <- as.matrix(this.simulated.trait$this.simulated.trait[,2])
 
   
 #Simulate this.nGenerations generations of directional selection
+
+
 directional.selection.population <- cross.stuff.for.a.whole.bunch.of.generations(
-  current.generation = the.founders,
+  current.generation = TrainPop,
   type.of.selection = "Direct",
   nSelect = this.nSelect,
   nCross = this.nCross,
@@ -226,7 +228,7 @@ directional.selection.population <- cross.stuff.for.a.whole.bunch.of.generations
 
 #Simulate this.nGenerations generations of disruptive selection
 disruptive.selection.population <- cross.stuff.for.a.whole.bunch.of.generations(
-  current.generation = the.founders,
+  current.generation = TrainPop,
   type.of.selection = "Disruptive",
   nSelect = this.nSelect,
   nCross = this.nCross,
@@ -238,7 +240,7 @@ disruptive.selection.population <- cross.stuff.for.a.whole.bunch.of.generations(
 
 #Simulate this.nGenerations generations of stabilizing selection
 stabilizing.selection.population <- cross.stuff.for.a.whole.bunch.of.generations(
-  current.generation = the.founders,
+  current.generation = TrainPop,
   type.of.selection = "Stabilizing",
   nSelect = this.nSelect,
   nCross = this.nCross,
