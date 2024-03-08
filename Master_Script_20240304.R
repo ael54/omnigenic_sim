@@ -283,4 +283,4 @@ combined.subpopulation.trait <- rbind(directional.subpopulation.trait,
 
 
 ###Save the R workspace
-save.image("Test_Run_small_data_set_20240305.Rdata")
+save.image("Test_Run_small_data_set_20240307.Rdata")
