@@ -251,7 +251,7 @@ stabilizing.selection.population <- cross.stuff.for.a.whole.bunch.of.generations
 
 
 
-#Merge the genotype data together from the three different subpopulations
+#Merge the SNP data together from the three different subpopulations
 directional.subpopulation.SNPs <- pullSnpGeno(directional.selection.population, 
                                          simParam = SP)
 
@@ -262,8 +262,27 @@ stabilizing.subpopulation.SNPs <- pullSnpGeno(stabilizing.selection.population,
                                              simParam = SP)
 
 combined.subpopulation.SNPs <- rbind(directional.subpopulation.SNPs,
-                          disruptive.subpopulation.SNPs,stabilizing.subpopulation.SNPs)
+                  disruptive.subpopulation.SNPs,stabilizing.subpopulation.SNPs)
 
+
+#Merge the QTN data together from the three different subpopulations
+directional.subpopulation.QTNs <- pullQtlGeno(pop=directional.selection.population, 
+                                              trait = 1, asRaw = FALSE, 
+                                              simParam = SP)
+
+
+
+disruptive.subpopulation.QTNs <- pullQtlGeno(pop=disruptive.selection.population, 
+                                             trait = 1, asRaw = FALSE, 
+                                             simParam = SP)
+
+
+stabilizing.subpopulation.QTNs <- pullQtlGeno(pop=disruptive.selection.population, 
+                                              trait = 1, asRaw = FALSE, 
+                                              simParam = SP)
+
+combined.subpopulation.QTNs <- rbind(directional.subpopulation.QTNs,
+                  disruptive.subpopulation.QTNs,stabilizing.subpopulation.QTNs)
 
 #Merge the trait data together from the three different subpopulations
 #####The code below is not working...fix it
