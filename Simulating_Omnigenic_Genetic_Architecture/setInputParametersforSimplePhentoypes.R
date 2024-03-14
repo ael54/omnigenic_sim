@@ -15,6 +15,6 @@
   this.seed.number.peri.peri.epi <- 995
   this.seed.number.core.peri.epi <- 994
   this.snps.are.in.columns <- FALSE
-  this.output.directory.name <- "DELETEME_Trial_20240223"
+  this.output.directory.name <- "DELETEME_Trial_20240314"
 
 
