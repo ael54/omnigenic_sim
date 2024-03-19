@@ -8,7 +8,7 @@ this.factor.A <- 2
 this.factor.B <- 0.05
 this.factor.C <- 0.05
 this.factor.D <- 0.05
-this.rep <- 1
+this.rep <- 2
 this.home.dir<- getwd()
 
 
@@ -19,13 +19,12 @@ factor.C <- this.factor.C
 factor.D <- this.factor.D 
 rep <- this.rep
 home.dir <- this.home.dir
-
-this.output.name <-  paste("Factor.A.", factor.A,
-                          "Factor.B.", factor.B,
-                          "Factor.C.", factor.C,
-                          "Factor.D.", factor.D,
-                          "Rep.", rep,
-                          sep = "")
+this.output.directory.name <-  paste("Factor.A.", factor.A,
+                                      "Factor.B.", factor.B,
+                                      "Factor.C.", factor.C,
+                                      "Factor.D.", factor.D,
+                                      "Rep.", this.rep,
+                                      sep = "")
 
 
 #Set your working directory
@@ -37,7 +36,10 @@ this.home.dir.name <- getwd()
 library(package = "AlphaSimR")
 library(package = "simplePHENOTYPES")
 
-
+#Source in all files
+source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omnigenic_Genetic_Architecture_as_a_Function_20240219.R")
+source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection.R")
+source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
 
 #Simulate a founder population in AlphaSimR
 source("Simulate_a_founder_Population_20240319.R")

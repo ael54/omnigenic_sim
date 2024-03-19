@@ -32,6 +32,7 @@ one.replicate.of.simulation.run() <- function(factor.A = NULL, factor.B = NULL,
                             seed.number.peri.peri.epi = this.seed.number.peri.peri.epi,
                             seed.number.core.peri.epi = this.seed.number.core.peri.epi,
                             snps.are.in.columns = this.snps.are.in.columns,
+                            seed.within.simplePHENOTYPES = this.rep,
                             output.directory.name = this.output.directory.name)
   
   #Put the simulated phentoypes from simplePHNEOTYPES back into AlphaSimR

@@ -15,6 +15,7 @@ simulate.omnigenic.architecture <- function(input.SNPs = NULL,
                                             seed.number.core.core.epi = NULL,
                                             seed.number.peri.peri.epi = NULL,
                                             seed.number.core.peri.epi = NULL,
+                                            seed.within.simplePHENOTYPES = NULL,
                                             snps.are.in.columns = TRUE,
                                             output.directory.name = NULL){
   #Randomly select which SNPs will be the core genes
@@ -158,7 +159,7 @@ simulate.omnigenic.architecture <- function(input.SNPs = NULL,
     output_dir = output.directory.name,
     to_r = T,
     sim_method = "custom",
-    seed = 217,
+    seed = seed.within.simplePHENOTYPES,
     model = "AE"
   )
   
