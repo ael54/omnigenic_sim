@@ -183,7 +183,7 @@ DIAGNOSTICS:
 
 Population Heritability: 0.9
 Sample heritability (Average of 1  replications): 
-[1] 0.9176207
+[1] 0.8963613
 
 
-Results are saved at: /Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Factor.A.2Factor.B.0.05Factor.C.0.05Factor.D.0.05Rep.2
+Results are saved at: /Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Factor.A.2Factor.B.0.05Factor.C.0.05Factor.D.0.05Rep.2(1)

@@ -2,12 +2,8 @@
 # for a visualization of what I want to do with this simualtion
 
 #Clear your workspace
-rm(list = ls())
 
-one.replicate.of.simulation.run() <- function(factor.A = NULL, factor.B = NULL,
-                                              factor.C = NULL, factor.D = NULL,
-                                              rep = NULL,
-                                              home.dir= NULL){
+one.replicate.of.simulation.run <- function(){
   
   #Initialize the parameters for simulating the omnigenic genetic architecture the function
   
