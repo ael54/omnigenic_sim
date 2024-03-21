@@ -51,8 +51,3 @@ for(i in c(1,2,4)){
   }#End for(j in 1:4)
 }#End for(i in 1:3)
 
-these.factorial.levels <- data.frame(factor.A, factor.B, factor.C, factor.D)
-
-setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/Housekeeping_notes_for_factorial_Experiment")
-
-write.csv(these.factorial.levels, "Tally_of_Experimental_Levels_Ran.csv", row.names = FALSE)
