@@ -1,9 +1,9 @@
 #Please see Slide 8: of /Lab_Presentations/Lab_Meeting_20240208/Lipka_A_Omnigenic_20240208.pptx
 # for a visualization of what I want to do with this simualtion
 
-#Clear your workspace
 
-one.replicate.of.simulation.run <- function(){
+
+#one.replicate.of.simulation.run <- function(){
   
   #Initialize the parameters for simulating the omnigenic genetic architecture the function
   
@@ -134,4 +134,4 @@ one.replicate.of.simulation.run <- function(){
                    factor.C,".FactorC..",factor.D,".FactorD..",
                    this.rep, ".Rep.Rdata", sep = ""))
   
-}#End one.replicate.of.simulation.run
+#}#End one.replicate.of.simulation.run

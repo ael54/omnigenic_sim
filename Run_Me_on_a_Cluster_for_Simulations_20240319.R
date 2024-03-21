@@ -15,7 +15,7 @@ library(package = "AlphaSimR")
 library(package = "simplePHENOTYPES")
 
 #Source in all files
-source("Master_Simulation_Script_as_a_function_20240319.R")
+
 source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omnigenic_Genetic_Architecture_as_a_Function_20240219.R")
 source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection.R")
 source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
@@ -44,7 +44,7 @@ for(i in c(1,2,4)){
                                                 "Factor.D.", el,
                                                 "Rep.", this.rep,
                                                 sep = "")
-           one.replicate.of.simulation.run()
+           source("Master_Simulation_Script_as_a_function_20240319.R")
          }#End for(rep in 1:3)
       }#End for(el in 1:4)
     }#End for(k in 1:4)

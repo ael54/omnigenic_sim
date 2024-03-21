@@ -1,0 +1,2 @@
+rep	snp	allele	chr	pos	cm	maf
+1	2_30	A/G	2	0.0276453765490944	NA	0

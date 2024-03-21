@@ -11,7 +11,7 @@ home.dir <- getwd()
 
 
 ###Read in the R workspace of simulated data
-load("Test_Run_small_data_set_Quick_Haplo_instead_of_runMacs2_20240314.Rdata")
+load("2.FactorA..0.05.FactorB..0.05.FactorC..0.05.FactorD..3.Rep.Rdata")
 
 
 #####Read in all of the packages that are necessary
