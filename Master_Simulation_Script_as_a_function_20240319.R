@@ -130,6 +130,8 @@ one.replicate.of.simulation.run <- function(){
   
   
   ###Save the R workspace
-  save.image("Test_Run_small_data_set_Quick_Haplo_instead_of_runMacs2_20240314.Rdata")
-
+  save.image(paste(factor.A,".FactorA..",factor.B, ".FactorB..",
+                   factor.C,".FactorC..",factor.D,".FactorD..",
+                   this.rep, ".Rep.Rdata", sep = ""))
+  
 }#End one.replicate.of.simulation.run

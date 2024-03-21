@@ -7,7 +7,7 @@
 
 #Set your working directory
 setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project")
-this.home.dir.name <- getwd()
+home.dir <- getwd()
 
 
 #Open all libraries
