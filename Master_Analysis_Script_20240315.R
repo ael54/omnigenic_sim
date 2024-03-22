@@ -19,12 +19,16 @@ load("2.FactorA..0.05.FactorB..0.05.FactorC..0.05.FactorD..3.Rep.Rdata")
 library('MASS')
 library(multtest)
 library(gplots)
+library(rrBLUP)
+
 
 #Read in GAPIT
 setwd("Scripts_Necessary_for_GAPIT")
 source("GAPIT_EMMA source code.txt")
 source("GAPIT_Code_from_Internet_20120411_Allelic_Effect.r")
 setwd(home.dir)
+
+
 
 ################################################################################
 ################################################################################
