@@ -1,89 +1,96 @@
 
 
 #Read in phenotypic data
-#Work in progress
+
 my.Y.validation <- data.frame(row.names(list.of.subpopulation.traits[[this.validation.set]]),
                    list.of.subpopulation.traits[[this.validation.set]])
+colnames(my.Y.validation) <- c("taxa", "Trait")
 
-my.Y.training <- data.frame(row.names(list.of.subpopulation.traits[[this.training.set]]),
-                              list.of.subpopulation.traits[[this.training.set]])
+if(length(this.training.set)==1){
+  my.Y.training <- data.frame(row.names(list.of.subpopulation.traits[[this.training.set]]),
+                                list.of.subpopulation.traits[[this.training.set]])
+  colnames(my.Y.training) <- c("taxa", "Trait")
+  }else{
+  counter <- 0
+  for(j in this.training.set){
+    this.my.Y.training <- data.frame(row.names(list.of.subpopulation.traits[[j]]),
+                                list.of.subpopulation.traits[[j]])
+    colnames(this.my.Y.training) <- c("taxa", "Trait")
+    if(counter == 0){
+      my.Y.training <- this.my.Y.training
+    }else{
+      my.Y.training <- rbind(my.Y.training, this.my.Y.training)
+    }#end if(j == 1)
+    counter <- counter+1
+  }#end for(j in 1:length(this.training.set))
+}#end else
+
+my.Y.for.pipeline <- rbind(my.Y.validation, my.Y.training)
+this.trait.name <- colnames(my.Y.for.pipeline)[2]
+
+#Read in the genotypic data
+my.G.validation <- data.frame(row.names(list.of.subpopulation.QTN[[this.validation.set]]),
+                              list.of.subpopulation.QTN[[this.validation.set]])
+colnames(my.G.validation)[1] <- "taxa"
+
+if(length(this.training.set)==1){
+  my.G.training <- data.frame(row.names(list.of.subpopulation.QTN[[this.training.set]]),
+                              list.of.subpopulation.QTN[[this.training.set]])
+  colnames(my.G.training)[1] <- "taxa"
+}else{
+  counter <- 0
+  for(j in this.training.set){
+    this.my.G.training <- data.frame(row.names(list.of.subpopulation.QTN[[j]]),
+                                list.of.subpopulation.QTN[[j]])
+    colnames(this.my.G.training)[1] <- "taxa"
+    if(counter == 0){
+      my.G.training <- this.my.G.training
+    }else{
+      my.G.training <- rbind(my.G.training, this.my.G.training)
+    }#end if(j == 1)
+    counter <- counter + 1
+  }#end for(j in 1:length(this.training.set))
+}#end else
 
 
 
-####Old code that need to get updated
-#Read in genotypic data
-my.G.whole.genome <- read.delim("ames_geno.hmp.txt", head = FALSE) 
+my.G.for.pipeline <- rbind(my.G.validation, my.G.training)
 
-#Read in a list of all lines in the Ames panel that are also part of the 282
-taxa.in.282 <- read.csv("Accessions_in_282_Only.csv", head = TRUE)
+#########################
+#Read in a list of all lines that are in the validation population
+taxa.in.validation <- my.Y.validation[,1]
 
 #Temporary code: save my.Y, my.G.whole.genome, and taxa.in.282 into 
 # an R workspace to save some time required to read in "large" files
 
-save.image("R.workspace.whole.genome.train.282.predict.Ames.Rdata")
 
-my.Y.for.pipeline <- my.Y[, c(1,2)]
-this.trait.name <- colnames(my.Y.for.pipeline)[2]
-dir.create("Results.202301224")
+dir.create("Results.GBLUP.Test.20240325")
 
 #Merge the genotypic data to the phenotypic data
 #####################Turn this into a function
 Y = my.Y.for.pipeline
-Geno = my.G.whole.genome
+Geno = my.G.for.pipeline
 traitname = this.trait.name
-path.for.results = "Results.202301224/"
+path.for.results = "Results.GBLUP.Test.20240325/"
 seed.number = 999
 
 
-
-
-
-  CV=Y[,1:2]
-  CV[,2]=1
-  colnames(CV)=c("taxa","overall")
   
-  hm=GAPIT.HapMap(G = Geno,SNP.effect="Add",SNP.impute="Major")
+ 
+  y <- as.matrix(Y[,-1])
   
   
-  #####################################
-  #Obtain the mafs of all SNPs
-  
-  #Total number of lines
-  ns <- nrow(hm$GD)
-  
-  #Sum of the allele scores for each SNP
-  ss <- apply(hm$GD, 2, sum)
-  
-  #Combine two situations: one where the allele coded as "2" is major; one where "0" is coded as major.
-  maf.matrix <- rbind((.5*ss/ns), (1-(0.5*ss/ns)))
-  
-  #Copy the minor allele frequencies for all SNPs
-  maf <- apply(maf.matrix, 2, min)
-  
-  #Find out which SNPs have MAF < 0.05
-  snps.below.0.05.maf <- which(maf < 0.05)
-  
-  # Remove these SNPs from hm$GD
-  
-  hm.GD.without.snps.below.0.05.maf <- hm$GD[,-snps.below.0.05.maf]
-  
-  ###############################
-  
-  GK <- cbind(hm$GT, hm.GD.without.snps.below.0.05.maf)
-  
-  qc=GAPIT.QC(Y = Y, GT = hm$GT, CV = CV, GK = GK)
-  
-  y <- as.matrix(qc$Y[-1])
-  
-  G <- as.numeric(qc$GK[,-1])
-  
-  G <- matrix(G, nrow(y), ncol(qc$GK[,-1]))
+  G <- as.matrix(my.G.for.pipeline[,-1], nrow(y), ncol(my.G.for.pipeline[,-1]))
   
   G <- G - 1
   
-  cv <- (as.matrix(qc$CV[,-1]))
+  #Set up the object CV, which needs to go along for the ride in rrBLUP
+  CV=Y[,1:2]
+  CV[,2]=1
+  colnames(CV)=c("taxa","overall")
+  cv <- (as.matrix(CV[,-1]))
   
-  taxa.names <- qc$CV[,1]
+  taxa.names <- CV[,1]
   
   #Calculate the kinship matrix in rrBLUP
   A1 <- A.mat(G,shrink=TRUE)
@@ -92,7 +99,7 @@ seed.number = 999
 
 
 #Partition out the merged data so that the 282 is the training set, and the Ames panel is the validation set
-pred <- which(!taxa.names %in% taxa.in.282[,1])
+pred <- which(taxa.names %in% taxa.in.validation)
   
 #Let GAPIT do this - it can read in the data, match all genotype and phenotype data,
 #   and calculate an additive genetic relatedness matrix
