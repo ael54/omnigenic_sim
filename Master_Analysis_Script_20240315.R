@@ -20,6 +20,7 @@ library('MASS')
 library(multtest)
 library(gplots)
 library(rrBLUP)
+library(sommer)
 
 
 #Read in GAPIT

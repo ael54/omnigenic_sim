@@ -18,6 +18,7 @@ validation.set <- NULL
 training.set.1 <- NULL
 training.set.2 <- NULL
 prediction.accuracy.GBLUP <- NULL
+prediction.accuracy.Multi.Kern.No.Epi <- NULL
 for(i in 1:length(names.of.subpopulations)){
   #Choose a particular subpopulation to be the validation population
   this.validation.set <- i
