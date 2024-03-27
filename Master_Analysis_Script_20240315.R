@@ -20,7 +20,7 @@ library('MASS')
 library(multtest)
 library(gplots)
 library(rrBLUP)
-library(sommer)
+
 
 
 #Read in GAPIT
@@ -75,7 +75,7 @@ spearman.correlations.between.peripheral.SNPs
 ###Genomic prediction across subpopulations phase
 
 #For the QTLs
-
+source("QG_Analysis_Code/Run_GS_on_QTNs.R")
 
 
 
