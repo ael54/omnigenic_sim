@@ -1,0 +1,54 @@
+---
+title: "AlphaSimR - demo of a trait with additive & epistatic effects"
+output: html_notebook
+---
+
+Setup simulation.
+
+```{r}
+library(AlphaSimR)
+
+# Create founder haplotypes
+foundersHap = quickHaplo(nInd=10, nChr=1, segSites=10)
+
+# Initiate simulation parameters
+SP = SimParam$new(foundersHap)
+```
+
+Now we specify a trait.
+
+```{r}
+# Add trait with Additive & Epistatic effects
+SP$addTraitAE(nQtlPerChr = 10,
+              mean = 0, # mean of genetic values
+              var = 1, # variance of genetic values --> genetic variance
+              relAA = 0.2) # relative value of additive-by-additive variance compared to additive variance in a diploid organism with allele frequency 0.5
+
+# Inspect simulated effects
+SP$traits
+```
+
+Now we apply this to a population.
+
+```{r}
+# Create a population
+founders = newPop(foundersHap)
+
+# Genetic values and parameters for the population
+genParam(founders)
+```
+
+Let's select parents, cross them, and show parameters in their progeny.
+
+```{r}
+# Select parents based on their genetic value (cheating here!)
+parents = selectInd(pop = founders, nInd = 4, use = "gv")
+parents
+
+# Cross
+progeny = randCross(pop = parents, nCrosses = 10)
+progeny
+
+# Genetic values and parameters for the population
+genParam(progeny)
+```

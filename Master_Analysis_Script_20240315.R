@@ -80,7 +80,6 @@ source("QG_Analysis_Code/Run_GS_on_QTNs.R")
 
 
 #For the SNPs
-
-
+source("QG_Analysis_Code/Run_GS_on_SNPs.R")
 
 
