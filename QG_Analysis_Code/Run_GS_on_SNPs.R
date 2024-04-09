@@ -16,12 +16,12 @@ names.of.subpopulations <- c("Directional.selection", "Disruptive.selection",
 validation.set <- NULL
 training.set.1 <- NULL
 training.set.2 <- NULL
-prediction.accuracy.GBLUP <- NULL
-for(i in 1:length(names.of.subpopulations)){
+prediction.accuracy.SNP.GBLUP <- NULL
+for(eye in 1:length(names.of.subpopulations)){
   #Choose a particular subpopulation to be the validation population
-  this.validation.set <- i
-  this.training.set.1 <- which(1:length(names.of.subpopulations)!= i)[1]
-  this.training.set.2 <- which(1:length(names.of.subpopulations)!= i)[2]
+  this.validation.set <- eye
+  this.training.set.1 <- which(1:length(names.of.subpopulations)!= eye)[1]
+  this.training.set.2 <- which(1:length(names.of.subpopulations)!= eye)[2]
   
   ##################################################################
   #Run genomic prediction using one of the other two populations as 
@@ -32,7 +32,7 @@ for(i in 1:length(names.of.subpopulations)){
   training.set.2 <- c(training.set.2, 0)
   ####Standard GBLUP model
   source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another_using_SNPs.R")
-  prediction.accuracy.GBLUP <- c(prediction.accuracy.GBLUP, r.gy) 
+  prediction.accuracy.SNP.GBLUP <- c(prediction.accuracy.SNP.GBLUP, r.gy) 
  
  
   ##################################################################
@@ -45,7 +45,7 @@ for(i in 1:length(names.of.subpopulations)){
   
   #Standard GBLUP model
   source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another_using_SNPs.R")
-  prediction.accuracy.GBLUP <- c(prediction.accuracy.GBLUP, r.gy) 
+  prediction.accuracy.SNP.GBLUP <- c(prediction.accuracy.SNP.GBLUP, r.gy) 
   
   
   #Multi-kernel model where the additive effects of core and peripheral
@@ -64,7 +64,7 @@ for(i in 1:length(names.of.subpopulations)){
   
   #Standard GBLUP model
   source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another_using_SNPs.R")
-  prediction.accuracy.GBLUP <- c(prediction.accuracy.GBLUP, r.gy) 
+  prediction.accuracy.SNP.GBLUP <- c(prediction.accuracy.SNP.GBLUP, r.gy) 
   
   
   #Multi-kernel model where the additive effects of core and peripheral
@@ -77,23 +77,22 @@ for(i in 1:length(names.of.subpopulations)){
   
   
   
-  } # End for(i in 1:length(names.of.subpopulations))
+  } # End for(eye in 1:length(names.of.subpopulations))
 
 #To-do: compile the results into a data frame
 prediction.accuracies.SNPs <- data.frame(validation.set, training.set.1, training.set.2 ,
-                                    prediction.accuracy.GBLUP)
-library(sommer)
+                                    prediction.accuracy.SNP.GBLUP)
 #Obtain the prediction accuracies for the multi-kernel-models
 validation.set <- NULL
 training.set.1 <- NULL
 training.set.2 <- NULL
-prediction.accuracy.Multi.Kern.No.Epi <- NULL
-prediction.accuracy.Multi.Kern.With.Epi <- NULL
-for(i in 1:length(names.of.subpopulations)){
+prediction.accuracy.SNP.Multi.Kern.No.Epi <- NULL
+prediction.accuracy.SNP.Multi.Kern.With.Epi <- NULL
+for(eye in 1:length(names.of.subpopulations)){
   #Choose a particular subpopulation to be the validation population
-  this.validation.set <- i
-  this.training.set.1 <- which(1:length(names.of.subpopulations)!= i)[1]
-  this.training.set.2 <- which(1:length(names.of.subpopulations)!= i)[2]
+  this.validation.set <- eye
+  this.training.set.1 <- which(1:length(names.of.subpopulations)!= eye)[1]
+  this.training.set.2 <- which(1:length(names.of.subpopulations)!= eye)[2]
   
   ##################################################################
   #Run genomic prediction using one of the other two populations as 
@@ -106,12 +105,12 @@ for(i in 1:length(names.of.subpopulations)){
   #####Multi-kernel model where the additive effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R")
-  prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
+  prediction.accuracy.SNP.Multi.Kern.No.Epi <- c(prediction.accuracy.SNP.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
   
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R")
-  prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
+  prediction.accuracy.SNP.Multi.Kern.With.Epi <- c(prediction.accuracy.SNP.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
   ##################################################################
   #Run genomic prediction using the second of the other two populations as 
   # the training set
@@ -125,12 +124,12 @@ for(i in 1:length(names.of.subpopulations)){
   #####Multi-kernel model where the additive effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R")
-  prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
+  prediction.accuracy.SNP.Multi.Kern.No.Epi <- c(prediction.accuracy.SNP.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
   
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R")
-  prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
+  prediction.accuracy.SNP.Multi.Kern.With.Epi <- c(prediction.accuracy.SNP.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
   
   ##################################################################
   #Run genomic prediction using the second of both of the other two 
@@ -145,17 +144,17 @@ for(i in 1:length(names.of.subpopulations)){
   #####Multi-kernel model where the additive effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R")
-  prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
+  prediction.accuracy.SNP.Multi.Kern.No.Epi <- c(prediction.accuracy.SNP.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
   
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R")
-  prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
+  prediction.accuracy.SNP.Multi.Kern.With.Epi <- c(prediction.accuracy.SNP.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
   
-} # End for(i in 1:length(names.of.subpopulations))
+} # End for(eye in 1:length(names.of.subpopulations))
 
-prediction.accuracies.SNPs <- data.frame(prediction.accuracies.SNPs, prediction.accuracy.Multi.Kern.No.Epi,
-                                    prediction.accuracy.Multi.Kern.With.Epi)
+prediction.accuracies.SNPs <- data.frame(prediction.accuracies.SNPs, prediction.accuracy.SNP.Multi.Kern.No.Epi,
+                                    prediction.accuracy.SNP.Multi.Kern.With.Epi)
 
 
 

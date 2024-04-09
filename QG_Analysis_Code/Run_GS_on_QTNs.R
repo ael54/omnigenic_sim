@@ -17,11 +17,11 @@ validation.set <- NULL
 training.set.1 <- NULL
 training.set.2 <- NULL
 prediction.accuracy.GBLUP <- NULL
-for(i in 1:length(names.of.subpopulations)){
+for(eye in 1:length(names.of.subpopulations)){
   #Choose a particular subpopulation to be the validation population
-  this.validation.set <- i
-  this.training.set.1 <- which(1:length(names.of.subpopulations)!= i)[1]
-  this.training.set.2 <- which(1:length(names.of.subpopulations)!= i)[2]
+  this.validation.set <- eye
+  this.training.set.1 <- which(1:length(names.of.subpopulations)!= eye)[1]
+  this.training.set.2 <- which(1:length(names.of.subpopulations)!= eye)[2]
   
   ##################################################################
   #Run genomic prediction using one of the other two populations as 
@@ -82,18 +82,18 @@ for(i in 1:length(names.of.subpopulations)){
 #To-do: compile the results into a data frame
 prediction.accuracies.QTNs <- data.frame(validation.set, training.set.1, training.set.2 ,
                                     prediction.accuracy.GBLUP)
-library(sommer)
+
 #Obtain the prediction accuracies for the multi-kernel-models
 validation.set <- NULL
 training.set.1 <- NULL
 training.set.2 <- NULL
 prediction.accuracy.Multi.Kern.No.Epi <- NULL
 prediction.accuracy.Multi.Kern.With.Epi <- NULL
-for(i in 1:length(names.of.subpopulations)){
+for(eye in 1:length(names.of.subpopulations)){
   #Choose a particular subpopulation to be the validation population
-  this.validation.set <- i
-  this.training.set.1 <- which(1:length(names.of.subpopulations)!= i)[1]
-  this.training.set.2 <- which(1:length(names.of.subpopulations)!= i)[2]
+  this.validation.set <- eye
+  this.training.set.1 <- which(1:length(names.of.subpopulations)!= eye)[1]
+  this.training.set.2 <- which(1:length(names.of.subpopulations)!= eye)[2]
   
   ##################################################################
   #Run genomic prediction using one of the other two populations as 

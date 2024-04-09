@@ -93,10 +93,11 @@ seed.number = 999
   taxa.names <- CV[,1]
   
   #Calculate the kinship matrix in rrBLUP
-  A1 <- A.mat(G,shrink=TRUE)
+  A1 <- A.mat(G)
+  colnames(A1) <- rownames(A1) <- c(1:nrow(y))
   ##############End the function over here - it should ouput: taxa names, A1, and y
 
-
+  sample.size <- nrow(y)
 
 #Partition out the merged data so that the 282 is the training set, and the Ames panel is the validation set
 pred <- which(taxa.names %in% taxa.in.validation)
@@ -113,12 +114,16 @@ for(j in 1:ncol(cv)) the.cv.names <- c(the.cv.names, paste("CV_",j,sep = ""))
 
 colnames(data1) <- c("y","gid", the.cv.names)
 
-rownames(A1) <- 1:nrow(A1)
-ans1 <- kin.blup(data1,K=A1,geno="gid",pheno="y", covariate = the.cv.names)
+data1$gid <- as.character(data1$gid)
+ans1 <- mmer(y~1, random = ~vsr(gid, Gu = A1),
+        data = data1, verbose = FALSE)
 
+GEBVs <- as.data.frame(ans1$U$`u:gid`$y)
+GEBVs  <- data.frame(as.numeric(rownames(GEBVs)), GEBVs )
+GEBVs <- GEBVs[order(GEBVs[,1]),] 
 
 #Evaluate prediction accuracy in the Ames panel
-r.gy <-  cor(ans1$g[pred], y[pred])
+r.gy <-  cor(GEBVs[pred,2], y[pred])
 
 
 

@@ -18,14 +18,14 @@ add.effect.estimates.core.QTN <- list(Directional.selection = NA,
 add.effect.estimates.peripheral.QTN <- list(Directional.selection = NA, 
                                             Disruptive.selection =NA, 
                                             Stabilizing.selection = NA)
-for(i in 1:length(names.of.subpopulations)){
-  this.myY <- data.frame(row.names(list.of.subpopulation.traits[[i]]),
-                         list.of.subpopulation.traits[[i]])
-  this.myGD <- data.frame(row.names(list.of.subpopulation.QTN[[i]]),list.of.subpopulation.QTN[[i]]) #(genotypes)
+for(eye in 1:length(names.of.subpopulations)){
+  this.myY <- data.frame(row.names(list.of.subpopulation.traits[[eye]]),
+                         list.of.subpopulation.traits[[eye]])
+  this.myGD <- data.frame(row.names(list.of.subpopulation.QTN[[eye]]),list.of.subpopulation.QTN[[eye]]) #(genotypes)
   this.myGM <- data.frame(paste("X", the.physical.map.of.QTLs[,1],sep = ""),
                           the.physical.map.of.QTLs[,2],
                           the.physical.map.of.QTLs[,4])#(map locations)
-  this.name.of.GAPIT.directory <- paste("GWAS.of.", names.of.subpopulations[i],
+  this.name.of.GAPIT.directory <- paste("GWAS.of.", names.of.subpopulations[eye],
                                         ".QTNs",sep = "")
   
   
@@ -58,23 +58,23 @@ for(i in 1:length(names.of.subpopulations)){
     QTL.and.add.EE$myGAPIT.GWAS.SNP %in% 
       paste("X", this.simulated.trait$core.genes$core.genes, sep = "")),]
   
-  add.effect.estimates.core.QTN[[i]] <- add.EE.of.core.QTLs
+  add.effect.estimates.core.QTN[[eye]] <- add.EE.of.core.QTLs
   
   
-  add.effect.estimates.peripheral.QTN[[i]] <- add.EE.of.peripheral.QTLs
-} # End for(i in 1:length(names.of.subpopulations))
+  add.effect.estimates.peripheral.QTN[[eye]] <- add.EE.of.peripheral.QTLs
+} # End for(eye in 1:length(names.of.subpopulations))
 
 #Calculate the Spearman Rank Correlations of core genes.
 the.pop.1 <- NULL
 the.pop.2 <- NULL
 the.spearman.rank <- NULL
-for(i in 1:(length(names.of.subpopulations)-1)){
-  for(j in (i+1):length(names.of.subpopulations)){
-    subpopulation.a <- add.effect.estimates.core.QTN[[i]]
-    names.of.subpopulation.a <- names.of.subpopulations[i]
+for(eye in 1:(length(names.of.subpopulations)-1)){
+  for(jay in (eye+1):length(names.of.subpopulations)){
+    subpopulation.a <- add.effect.estimates.core.QTN[[eye]]
+    names.of.subpopulation.a <- names.of.subpopulations[eye]
     
-    subpopulation.b <- add.effect.estimates.core.QTN[[j]]
-    names.of.subpopulation.j <- names.of.subpopulations[j]    
+    subpopulation.b <- add.effect.estimates.core.QTN[[jay]]
+    names.of.subpopulation.jay <- names.of.subpopulations[jay]    
     
     subpopulations.combined <- merge(subpopulation.a, subpopulation.b, 
                                      by.x = "myGAPIT.GWAS.SNP",
@@ -83,12 +83,12 @@ for(i in 1:(length(names.of.subpopulations)-1)){
     this.spearman.rank.correlation <- cor(subpopulations.combined$myGAPIT.GWAS.Effect.Est.x,
                                           subpopulations.combined$myGAPIT.GWAS.Effect.Est.y,
                                           method = "spearman", use = "complete.obs")
-    the.pop.1 <- c(the.pop.1, i)
-    the.pop.2 <- c(the.pop.2, j)
+    the.pop.1 <- c(the.pop.1, eye)
+    the.pop.2 <- c(the.pop.2, jay)
     the.spearman.rank <- c(the.spearman.rank,  this.spearman.rank.correlation)
     
-  }# for(j in i:length(names.of.subpopulations))
-}#End for(i in 1:length(names.of.subpopulations))
+  }# for(jay in eye:length(names.of.subpopulations))
+}#End for(eye in 1:length(names.of.subpopulations))
 
 spearman.correlations.between.core.QTNs <- data.frame(the.pop.1,
                                                       the.pop.2,
@@ -101,13 +101,13 @@ spearman.correlations.between.core.QTNs <- data.frame(the.pop.1,
 the.pop.1 <- NULL
 the.pop.2 <- NULL
 the.spearman.rank <- NULL
-for(i in 1:(length(names.of.subpopulations)-1)){
-  for(j in (i+1):length(names.of.subpopulations)){
-    subpopulation.a <- add.effect.estimates.peripheral.QTN[[i]]
-    names.of.subpopulation.a <- names.of.subpopulations[i]
+for(eye in 1:(length(names.of.subpopulations)-1)){
+  for(jay in (eye+1):length(names.of.subpopulations)){
+    subpopulation.a <- add.effect.estimates.peripheral.QTN[[eye]]
+    names.of.subpopulation.a <- names.of.subpopulations[eye]
     
-    subpopulation.b <- add.effect.estimates.peripheral.QTN[[j]]
-    names.of.subpopulation.j <- names.of.subpopulations[j]    
+    subpopulation.b <- add.effect.estimates.peripheral.QTN[[jay]]
+    names.of.subpopulation.jay <- names.of.subpopulations[jay]    
     
     subpopulations.combined <- merge(subpopulation.a, subpopulation.b, 
                                      by.x = "myGAPIT.GWAS.SNP",
@@ -116,12 +116,12 @@ for(i in 1:(length(names.of.subpopulations)-1)){
     this.spearman.rank.correlation <- cor(subpopulations.combined$myGAPIT.GWAS.Effect.Est.x,
                                           subpopulations.combined$myGAPIT.GWAS.Effect.Est.y,
                                           method = "spearman",  use = "complete.obs")
-    the.pop.1 <- c(the.pop.1, i)
-    the.pop.2 <- c(the.pop.2, j)
+    the.pop.1 <- c(the.pop.1, eye)
+    the.pop.2 <- c(the.pop.2, jay)
     the.spearman.rank <- c(the.spearman.rank,  this.spearman.rank.correlation )
     
-  }# for(j in i:length(names.of.subpopulations))
-}#End for(i in 1:length(names.of.subpopulations))
+  }# for(jay in eye:length(names.of.subpopulations))
+}#End for(eye in 1:length(names.of.subpopulations))
 
 spearman.correlations.between.peripheral.QTNs <- data.frame(the.pop.1,
                                                       the.pop.2,
