@@ -64,7 +64,7 @@ for(i in c(1,2,4)){
                                                  this.rep, ".Rep", sep = "")
 
            #Run the master script; source it in
-           source("Master_Simulation_Script_as_a_function_20240319.R")
+           source("Master_Analysis_Script_20240315.R")
            
            
            ##############################################################
@@ -93,7 +93,7 @@ for(i in c(1,2,4)){
            ##############################################################
            #### Append GS Results
            #Append results to the lists you created before the start of this rep
-           these.prediction.accuracies.QTNs[[count]] <- prediction.accuracies.QTNs
+           these.prediction.accuracies.QTNs[[count]] <- prediction.accuracies.QTNs 
            names(these.prediction.accuracies.QTNs)[count] <- this.setting 
            
            these.prediction.accuracies.SNPs[[count]] <- prediction.accuracies.SNPs
