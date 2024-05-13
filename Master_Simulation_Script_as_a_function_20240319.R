@@ -1,5 +1,5 @@
 #Please see Slide 8: of /Lab_Presentations/Lab_Meeting_20240208/Lipka_A_Omnigenic_20240208.pptx
-# for a visualization of what I want to do with this simualtion
+# for a visualization of what I want to do with this simulation
 
 
 
