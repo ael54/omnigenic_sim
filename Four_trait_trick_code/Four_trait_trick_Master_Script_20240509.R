@@ -4,34 +4,6 @@
 # AlphaSimR and simplePHENOTYPES
 
 
-
-#############################################################################################
-##############################################################
-# The steps immeidately below are temporary. I envision that this would be ran
-# as a function, and applied to every single trait that is simulated in
-# every single popluation
-
-#Set your working directory
-setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/")
-home.dir <- getwd()
-
-
-#Open all libraries
-library(package = "AlphaSimR")
-library(package = "simplePHENOTYPES")
-
-#Read in a simulated rep so that you have something to work with
-load("2.FactorA..0.05.FactorB..0.05.FactorC..0.05.FactorD..3.Rep.Rdata")
-
-#Obtain the parameters used by simplePHENOTYPES
-source("Simulating_Omnigenic_Genetic_Architecture/setInputParametersforSimplePhentoypes.R")
-
-#Obtain the genotypic data
-this.input.SNPs <- hapmap.file.of.founder.QTLs
-
-
-
-
 #################################################
 #Partition out the which loci and effects for each of the four traits
 #Trait 1: the whole thing
@@ -42,13 +14,50 @@ this.input.SNPs <- hapmap.file.of.founder.QTLs
 
 
 #Simulate the four traits in simplePHENOTYPES
-
+four.traits.omni.core.peri.coreperi <- simulate.omni.four.trait.trick (input.SNPs = this.input.SNPs,
+                                           number.of.trait.reps = this.number.of.trait.reps,
+                                           broad.sense.H2 = this.broad.sense.H2,
+                                           number.of.core.genes = this.number.of.core.genes,
+                                           sigma.2.C = this.sigma.2.C,
+                                           sigma.2.N = this.sigma.2.N,
+                                           sigma.2.CC = this.sigma.2.CC,
+                                           sigma.2.NN = this.sigma.2.NN,
+                                           sigma.2.CN = this.sigma.2.CN, 
+                                           seed.number.core.vs.perhiperal = this.seed.number.core.vs.perhiperal,
+                                           seed.number.core.add = this.seed.number.core.add,
+                                           seed.number.peripheral.add = this.seed.number.peripheral.add,
+                                           seed.number.core.core.epi = this.seed.number.core.core.epi,
+                                           seed.number.peri.peri.epi = this.seed.number.peri.peri.epi,
+                                           seed.number.core.peri.epi = this.seed.number.core.peri.epi,
+                                           seed.within.simplePHENOTYPES = this.rep,
+                                           snps.are.in.columns = this.snps.are.in.columns,
+                                           output.directory.name = this.output.directory.name)
 
 #Simulate the genetic values of the four traits in simplePHENOTYPES
+four.genetic.values.omni.core.peri.coreperi <- simulate.omni.four.trait.trick (input.SNPs = this.input.SNPs,
+                                                                       number.of.trait.reps = this.number.of.trait.reps,
+                                                                       broad.sense.H2 = 1,
+                                                                       number.of.core.genes = this.number.of.core.genes,
+                                                                       sigma.2.C = this.sigma.2.C,
+                                                                       sigma.2.N = this.sigma.2.N,
+                                                                       sigma.2.CC = this.sigma.2.CC,
+                                                                       sigma.2.NN = this.sigma.2.NN,
+                                                                       sigma.2.CN = this.sigma.2.CN, 
+                                                                       seed.number.core.vs.perhiperal = this.seed.number.core.vs.perhiperal,
+                                                                       seed.number.core.add = this.seed.number.core.add,
+                                                                       seed.number.peripheral.add = this.seed.number.peripheral.add,
+                                                                       seed.number.core.core.epi = this.seed.number.core.core.epi,
+                                                                       seed.number.peri.peri.epi = this.seed.number.peri.peri.epi,
+                                                                       seed.number.core.peri.epi = this.seed.number.core.peri.epi,
+                                                                       seed.within.simplePHENOTYPES = this.rep,
+                                                                       snps.are.in.columns = this.snps.are.in.columns,
+                                                                       output.directory.name = this.output.directory.name)
 
 
 #Use popVar to calculate the variance-covariance matrix of the traits
+the.trait.values <- as.matrix(four.traits.omni.core.peri.coreperi$this.simulated.trait[,-c(1,6)])
+var.covar.of.trait.values <- popVar(the.trait.values)
 
 #Use popVar to calculate the variance-covariance matrix of the genetic values
-
-
+the.genetic.values <- as.matrix(four.genetic.values.omni.core.peri.coreperi$this.simulated.trait[,-c(1,6)])
+var.covar.of.genetic.values <- popVar(the.genetic.values)

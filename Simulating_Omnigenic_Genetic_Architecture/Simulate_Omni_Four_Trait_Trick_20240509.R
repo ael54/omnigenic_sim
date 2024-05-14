@@ -1,24 +1,3 @@
-#Please see Basic_Idea/Sketch_of_Simulating_Omngenic_Model_20240130..pptx
-######The following will be turned into arguments that are 
-####Inputted into the function
-input.SNPs = this.input.SNPs
-number.of.trait.reps = this.number.of.trait.reps
-broad.sense.H2 = this.broad.sense.H2
-number.of.core.genes = this.number.of.core.genes
-sigma.2.C = this.sigma.2.C
-sigma.2.N = this.sigma.2.N
-sigma.2.CC = this.sigma.2.CC
-sigma.2.NN = this.sigma.2.NN
-sigma.2.CN = this.sigma.2.CN 
-seed.number.core.vs.perhiperal = this.seed.number.core.vs.perhiperal
-seed.number.core.add = this.seed.number.core.add
-seed.number.peripheral.add = this.seed.number.peripheral.add
-seed.number.core.core.epi = this.seed.number.core.core.epi
-seed.number.peri.peri.epi = this.seed.number.peri.peri.epi
-seed.number.core.peri.epi = this.seed.number.core.peri.epi
-snps.are.in.columns = this.snps.are.in.columns
-seed.within.simplePHENOTYPES = this.rep
-output.directory.name = this.output.directory.name
 
 #The arguments end here
 #############################################
@@ -201,7 +180,7 @@ simulate.omni.four.trait.trick <- function(input.SNPs = NULL,
     QTN_list = QTN_list,
     rep = number.of.trait.reps,
     vary_QTN = FALSE,
-    output_format = "wide",
+    output_format = "long",
     architecture = "pleiotropic",
     home_dir = home.dir,
     output_dir = output.directory.name,
