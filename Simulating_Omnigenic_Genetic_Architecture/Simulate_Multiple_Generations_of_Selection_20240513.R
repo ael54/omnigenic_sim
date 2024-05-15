@@ -132,6 +132,8 @@ cross.stuff.for.a.whole.bunch.of.generations <- function(current.generation = NU
     } #End for(i in 1:nGenerations)
   
   return(list(current.generation = current.generation, trait.var.covar = trait.var.covar, 
-              genetic.value.var.covar = genetic.value.var.covar))
+              genetic.value.var.covar = genetic.value.var.covar,
+              four.trait.values = the.trait.values,
+              four.genetic.values = the.genetic.values))
 
 } #end cross.stuff.for.a.whole.bunch.of.generations

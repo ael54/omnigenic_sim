@@ -99,13 +99,13 @@
   
   
   #Merge the SNP data together from the three different subpopulations
-  directional.subpopulation.SNPs <- pullSnpGeno(directional.selection.population, 
+  directional.subpopulation.SNPs <- pullSnpGeno(directional.selection.population$current.generation, 
                                            simParam = SP)
   
-  disruptive.subpopulation.SNPs <- pullSnpGeno(disruptive.selection.population, 
+  disruptive.subpopulation.SNPs <- pullSnpGeno(disruptive.selection.population$current.generation, 
                                            simParam = SP)
   
-  stabilizing.subpopulation.SNPs <- pullSnpGeno(stabilizing.selection.population, 
+  stabilizing.subpopulation.SNPs <- pullSnpGeno(stabilizing.selection.population$current.generation, 
                                                simParam = SP)
   
   combined.subpopulation.SNPs <- rbind(directional.subpopulation.SNPs,
@@ -113,18 +113,18 @@
   
   
   #Merge the QTN data together from the three different subpopulations
-  directional.subpopulation.QTNs <- pullQtlGeno(pop=directional.selection.population, 
+  directional.subpopulation.QTNs <- pullQtlGeno(pop=directional.selection.population$current.generation, 
                                                 trait = 1, asRaw = FALSE, 
                                                 simParam = SP)
   
   
   
-  disruptive.subpopulation.QTNs <- pullQtlGeno(pop=disruptive.selection.population, 
+  disruptive.subpopulation.QTNs <- pullQtlGeno(pop=disruptive.selection.population$current.generation, 
                                                trait = 1, asRaw = FALSE, 
                                                simParam = SP)
   
   
-  stabilizing.subpopulation.QTNs <- pullQtlGeno(pop=stabilizing.selection.population, 
+  stabilizing.subpopulation.QTNs <- pullQtlGeno(pop=stabilizing.selection.population$current.generation, 
                                                 trait = 1, asRaw = FALSE, 
                                                 simParam = SP)
   
@@ -133,14 +133,14 @@
   
   #Merge the trait data together from the three different subpopulations
   #####The code below is not working...fix it
-  directional.subpopulation.trait <- directional.selection.population@pheno
+  directional.subpopulation.trait <- directional.selection.population$current.generation@pheno
   row.names(directional.subpopulation.trait) = row.names(directional.subpopulation.SNPs)
   
-  disruptive.subpopulation.trait <- disruptive.selection.population@pheno
+  disruptive.subpopulation.trait <- disruptive.selection.population$current.generation@pheno
   row.names(disruptive.subpopulation.trait) = row.names(disruptive.subpopulation.SNPs)
   
   
-  stabilizing.subpopulation.trait <- stabilizing.selection.population@pheno
+  stabilizing.subpopulation.trait <- stabilizing.selection.population$current.generation@pheno
   row.names(stabilizing.subpopulation.trait) = row.names(stabilizing.subpopulation.SNPs)
   
   
