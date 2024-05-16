@@ -54,6 +54,9 @@ four.genetic.values.omni.core.peri.coreperi <- simulate.omni.four.trait.trick (i
                                                                        output.directory.name = this.output.directory.name)
 
 
+
+
+
 #Use popVar to calculate the variance-covariance matrix of the traits
 the.trait.values <- as.matrix(four.traits.omni.core.peri.coreperi$this.simulated.trait[,-c(1,6)])
 var.covar.of.trait.values <- popVar(the.trait.values)
@@ -61,3 +64,17 @@ var.covar.of.trait.values <- popVar(the.trait.values)
 #Use popVar to calculate the variance-covariance matrix of the genetic values
 the.genetic.values <- as.matrix(four.genetic.values.omni.core.peri.coreperi$this.simulated.trait[,-c(1,6)])
 var.covar.of.genetic.values <- popVar(the.genetic.values)
+
+#Obtain the breeding values
+the.breeding.values <- get.me.my.breeding.values(SP.within.function = SP,
+                   current.generation = TrainPop,
+                   traits = four.traits.omni.core.peri.coreperi$this.simulated.trait,
+                   core.genes = four.traits.omni.core.peri.coreperi$core.genes,
+                   peripheral.genes = four.traits.omni.core.peri.coreperi$peripheral.genes,
+                   core.core.epistasis = four.traits.omni.core.peri.coreperi$core.core.epistasis,
+                   peri.peri.epistasis = four.traits.omni.core.peri.coreperi$peri.peri.epistasis,
+                   core.peri.epistasis = four.traits.omni.core.peri.coreperi$core.peri.epistasis,
+                   calculate.epi.dev = FALSE)
+
+
+var.covar.of.breeding.values <- popVar(the.breeding.values)
