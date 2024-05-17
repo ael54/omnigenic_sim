@@ -52,15 +52,13 @@
     trait.var.covar = these.trait.var.covar,
     genetic.value.var.covar = these.genetic.value.var.covar,
     breeding.value.var.covar = these.breeding.value.var.covar,
-    initial.count.value = length(these.genetic.value.var.covar),
+    initial.count.value = length(these.genetic.value.var.covar)
   )
    
   #Join the variance-covariance matrices together
-  these.trait.var.covar <- c(these.trait.var.covar, directional.selection.population$trait.var.covar)
-  these.genetic.value.var.covar <- c(these.genetic.value.var.covar, 
-                                     directional.selection.population$genetic.value.var.covar)
-  these.breeding.value.var.covar <- c(these.breeding.value.var.covar,
-                                      directional.selection.population$breeding.value.var.covar)
+  these.trait.var.covar <-  directional.selection.population$trait.var.covar
+  these.genetic.value.var.covar <- directional.selection.population$genetic.value.var.covar
+  these.breeding.value.var.covar <- directional.selection.population$breeding.value.var.covar
   
   #Simulate this.nGenerations generations of disruptive selection
   disruptive.selection.population <- cross.stuff.for.a.whole.bunch.of.generations(
@@ -78,11 +76,9 @@
   )
   
   #Join the variance-covariance matrices together
-  these.trait.var.covar <- c(these.trait.var.covar, disruptive.selection.population$trait.var.covar)
-  these.genetic.value.var.covar <- c(these.genetic.value.var.covar, 
-                                     disruptive.selection.population$genetic.value.var.covar)
-  these.breeding.value.var.covar <- c(these.breeding.value.var.covar,
-                                      disruptive.selection.population$breeding.value.var.covar)
+  these.trait.var.covar <- disruptive.selection.population$trait.var.covar
+  these.genetic.value.var.covar <- disruptive.selection.population$genetic.value.var.covar
+  these.breeding.value.var.covar <- disruptive.selection.population$breeding.value.var.covar
   
   
   #Simulate this.nGenerations generations of stabilizing selection
@@ -100,11 +96,9 @@
     initial.count.value = length(these.genetic.value.var.covar)
   )
   #Join the variance-covariance matrices together
-  these.trait.var.covar <- c(these.trait.var.covar,  stabilizing.selection.population$trait.var.covar)
-  these.genetic.value.var.covar <- c(these.genetic.value.var.covar, 
-                                     stabilizing.selection.population$genetic.value.var.covar)
-  these.breeding.value.var.covar <- c(these.breeding.value.var.covar,
-                                      stabilizing.selection.population$breeding.value.var.covar)
+  these.trait.var.covar <-  stabilizing.selection.population$trait.var.covar
+  these.genetic.value.var.covar <- stabilizing.selection.population$genetic.value.var.covar
+  these.breeding.value.var.covar <- stabilizing.selection.population$breeding.value.var.covar
   
   
   

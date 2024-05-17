@@ -16,11 +16,6 @@ cross.stuff.for.a.whole.bunch.of.generations <- function(current.generation = NU
                                           breeding.value.var.covar = NULL,
                                           initial.count.value = 1){
     count.local <- initial.count.value+1
-    if(!((length(trait.var.covar) == length(genetic.value.var.covar))&
-         (length(trait.var.covar) == length(breeding.value.var.covar)))){
-      print("####################The lengths of trait.var.covar, genetic.value.var.covar, and breeding.value.var.covar are not equal. Please fix this.#############################")
-  
-    }
     for(i in 1:nGenerations){  
       print(paste("---------------Initiating generation ", i, " of ", 
                   type.of.selection, " selection------------", sep = ""))
@@ -112,13 +107,11 @@ cross.stuff.for.a.whole.bunch.of.generations <- function(current.generation = NU
       #Use popVar to calculate the variance-covariance matrix of the traits
       the.trait.values <- as.matrix(four.traits.omni.core.peri.coreperi$this.simulated.trait[,-c(1,6)])
       var.covar.of.trait.values <- popVar(the.trait.values)
-     
       
       #Use popVar to calculate the variance-covariance matrix of the genetic values
       the.genetic.values <- as.matrix(four.genetic.values.omni.core.peri.coreperi$this.simulated.trait[,-c(1,6)])
       var.covar.of.genetic.values <- popVar(the.genetic.values)
 
-      
       #Obtain the breeding values
       the.breeding.values <- get.me.my.breeding.values(SP.within.function = SP,
                                                        current.generation = the.next.gen,
