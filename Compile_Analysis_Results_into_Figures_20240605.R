@@ -124,16 +124,69 @@ data.for.boxplot <- data.frame(spearman.rank.vector, factor.A.vector,
 pdf("GWAS.Results.Core.QTL.written.while.writing.plot.code.pdf", width = 8)
 par(mfrow = c(3,4))
  #Two for loops through the pairs of three subpopulations
+  for(this.pop.a in 1:2){
+    for(this.pop.b in (this.pop.a+1):3){
+        #Extract the rows for only the populations you want to compare
+        data.for.boxplot.these.two.pops <- data.for.boxplot[which((data.for.boxplot$pop.A.vector == this.pop.a)
+                                                                  &(data.for.boxplot$pop.B.vector == this.pop.b) ),]
+        #Remove "NAs" from the results
+        data.for.boxplot.these.two.pops <- na.omit(data.for.boxplot.these.two.pops)
+        
+      
+        
+        #Make a box plot for Factor A   
+        means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                    data.for.boxplot.these.two.pops$factor.A.vector, mean)
+        
+        boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+                data.for.boxplot.these.two.pops$factor.A.vector, col = "Red", ylim = c(-1,1),
+                xlab = "Level of Factor A", ylab = paste("Spearman rank between populations ",
+                                                         this.pop.a, " and ", this.pop.b, sep = ""))
+        points(c(1:length(means)), means, pch = 3, cex = 0.75)
+  
+        
+        #Make a box plot for Factor B
+        means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                    data.for.boxplot.these.two.pops$factor.B.vector, mean)
+        
+        boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+                  data.for.boxplot.these.two.pops$factor.B.vector, col = "Red", ylim = c(-1,1), 
+                xlab = "Level of Factor B", ylab = paste("Spearman rank between populations ",
+                                                         this.pop.a, " and ", this.pop.b, sep = ""))
+        points(c(1:length(means)), means, pch = 3, cex = 0.75)
+  
+        
+        #Make a box plot for Factor C
+        means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                    data.for.boxplot.these.two.pops$factor.C.vector, mean)
+        
+        boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+                  data.for.boxplot.these.two.pops$factor.C.vector, col = "Red", ylim = c(-1,1), 
+                xlab = "Level of Factor C", ylab = paste("Spearman rank between populations ",
+                                                         this.pop.a, " and ", this.pop.b, sep = ""))
+        points(c(1:length(means)), means, pch = 3, cex = 0.75)
+        
+        
+        #Make a box plot for Factor D
+        means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                    data.for.boxplot.these.two.pops$factor.D.vector, mean)
+        
+        boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+                  data.for.boxplot.these.two.pops$factor.D.vector, col = "Red", ylim = c(-1,1), 
+                xlab = "Level of Factor D", ylab = paste("Spearman rank between populations ",
+                                                         this.pop.a, " and ", this.pop.b, sep = ""))
+        points(c(1:length(means)), means, pch = 3, cex = 0.75)
+        
 
-  #For loop through the main effects of Factors A-D
-    #For loop through the different levels of Factor i
-        ####
-        #Box plot of Spearman rank correlation coefficients of core QTL (Y-axis)
-        ### Against factor levels (X-axis)
-    #End for loop through the different levels of Factor i
-
-  # End for loop through the main effect pairs of populations 
-   
+          #For loop through the different levels of Factor i
+              ####
+              #Box plot of Spearman rank correlation coefficients of core QTL (Y-axis)
+              ### Against factor levels (X-axis)
+          #End for loop through the different levels of Factor i
+      
+        # End for loop through the main effect pairs of populations 
+    }#End for(this.pop.b in (this.pop.a+1):3)
+  }#End for(this.pop.a in 1:2) 
 #End the plot
 dev.off()
 
@@ -157,17 +210,137 @@ dev.off()
 #######################################################
 ### Results for the peripheral QTL
 #######################################################
+these.spearman.rank.correlation.between.GWAS.peripheral.QTNs  <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/Master-Result-Lists-2024-06-13/master.these.spearman.rank.correlation.between.GWAS.peripheral.QTNs.RDS")
+
+#Extract all of the results and put them into an object
+spearman.rank.vector <- NULL
+factor.A.vector <- NULL
+factor.B.vector <- NULL
+factor.C.vector <- NULL
+factor.D.vector <- NULL
+rep.vector <- NULL
+pop.A.vector <- NULL
+pop.B.vector <- NULL
+for(i in c(1,2,4)){
+  for(j in c(0.05,0.5,1,2)){
+    for(k in c(0.05,0.5,1,2)){
+      for(el in c(0.05,0.5,1,2)){
+        for(rep in 1:3){
+          #Get the object from the list you want
+          factor.A <- i
+          factor.B <- j
+          factor.C <- k
+          factor.D <- el 
+          this.rep <- rep
+          
+          #Read in the R data file for a given setting
+          this.setting <-  paste(factor.A,".FactorA..",factor.B, ".FactorB..",
+                                 factor.C,".FactorC..",factor.D,".FactorD..",
+                                 this.rep, ".Rep", sep = "")
+          
+          #Extract the results we want
+          results.this.setting <- these.spearman.rank.correlation.between.GWAS.peripheral.QTNs[which(names(these.spearman.rank.correlation.between.GWAS.peripheral.QTNs)
+                                                                                               == this.setting)]
+          
+          
+          #Put the results into a format that we can extract the numbers from                                                                                                                                                                        == this.setting)]
+          results.this.setting.for.figure <- matrix(unlist(results.this.setting), nrow = 3)
+          #Loop through the pairs of populations, and extract the information we need
+          for(this.row in 1:nrow(results.this.setting.for.figure)){
+            spearman.rank.vector <- c(spearman.rank.vector, results.this.setting.for.figure[this.row,3])
+            factor.A.vector <- c(factor.A.vector, factor.A)
+            factor.B.vector <- c(factor.B.vector, factor.B)
+            factor.C.vector <- c(factor.C.vector, factor.C)
+            factor.D.vector <- c(factor.D.vector, factor.D)
+            rep.vector <- c(rep.vector, this.rep)
+            pop.A.vector <-c(pop.A.vector, results.this.setting.for.figure[this.row,1])
+            pop.B.vector <- c(pop.B.vector, results.this.setting.for.figure[this.row,2])
+          }#End for(this.row in 1:nrow(results.this.setting.for.figure))
+        }#End for(rep in 1:3)
+      }#End for(el in 1:4)
+    }#End for(k in 1:4)
+  }#End for(j in 1:4)
+}#End for(i in 1:3)
+
+#Obtain the data for your boxplot
+data.for.boxplot <- data.frame(spearman.rank.vector, factor.A.vector,
+                               factor.B.vector, factor.C.vector,
+                               factor.D.vector, rep.vector,
+                               pop.A.vector, pop.B.vector)
+
 #Make a plot summarizing the GWAS results of core QTL
+#Ultimately, the information that I need for the box plots are
+# Value: in column 1 and Factor Level in column 2
+
 #Initiate the plot
-  #For loop through the pairs of three subpopulations
-    #For loop through the main effects of Factors A-D
-      #For loop through the different levels of Factor i
-        ####
-        #Box plot of Spearman rank correlation coefficients of peripheral QTL (Y-axis)
-        ### Against factor levels (X-axis)
+pdf("GWAS.Results.Peripheral.QTL.written.while.writing.plot.code.pdf", width = 8)
+par(mfrow = c(3,4))
+#Two for loops through the pairs of three subpopulations
+for(this.pop.a in 1:2){
+  for(this.pop.b in (this.pop.a+1):3){
+    #Extract the rows for only the populations you want to compare
+    data.for.boxplot.these.two.pops <- data.for.boxplot[which((data.for.boxplot$pop.A.vector == this.pop.a)
+                                                              &(data.for.boxplot$pop.B.vector == this.pop.b) ),]
+    #Remove "NAs" from the results
+    data.for.boxplot.these.two.pops <- na.omit(data.for.boxplot.these.two.pops)
+    
+    
+    
+    #Make a box plot for Factor A   
+    means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                data.for.boxplot.these.two.pops$factor.A.vector, mean)
+    
+    boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+              data.for.boxplot.these.two.pops$factor.A.vector, col = "Blue", ylim = c(-1,1),
+            xlab = "Level of Factor A", ylab = paste("Spearman rank between populations ",
+                                                     this.pop.a, " and ", this.pop.b, sep = ""))
+    points(c(1:length(means)), means, pch = 3, cex = 0.75)
+    
+    
+    #Make a box plot for Factor B
+    means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                data.for.boxplot.these.two.pops$factor.B.vector, mean)
+    
+    boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+              data.for.boxplot.these.two.pops$factor.B.vector, col = "Blue", ylim = c(-1,1),
+            xlab = "Level of Factor B", ylab = paste("Spearman rank between populations ",
+                                                     this.pop.a, " and ", this.pop.b, sep = ""))
+    points(c(1:length(means)), means, pch = 3, cex = 0.75)
+    
+    
+    #Make a box plot for Factor C
+    means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                data.for.boxplot.these.two.pops$factor.C.vector, mean)
+    
+    boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+              data.for.boxplot.these.two.pops$factor.C.vector, col = "Blue", ylim = c(-1,1),
+            xlab = "Level of Factor C", ylab = paste("Spearman rank between populations ",
+                                                     this.pop.a, " and ", this.pop.b, sep = ""))
+    points(c(1:length(means)), means, pch = 3, cex = 0.75)
+    
+    
+    #Make a box plot for Factor D
+    means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                data.for.boxplot.these.two.pops$factor.D.vector, mean)
+    
+    boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+              data.for.boxplot.these.two.pops$factor.D.vector, col = "Blue", ylim = c(-1,1),
+            xlab = "Level of Factor D", ylab = paste("Spearman rank between populations ",
+                                                     this.pop.a, " and ", this.pop.b, sep = ""))
+    points(c(1:length(means)), means, pch = 3, cex = 0.75)
+    
+    
+    #For loop through the different levels of Factor i
+    ####
+    #Box plot of Spearman rank correlation coefficients of core QTL (Y-axis)
+    ### Against factor levels (X-axis)
     #End for loop through the different levels of Factor i
-  #End for loop through the main effect pairs of populations
+    
+    # End for loop through the main effect pairs of populations 
+  }#End for(this.pop.b in (this.pop.a+1):3)
+}#End for(this.pop.a in 1:2) 
 #End the plot
+dev.off()
 
 
 #########
