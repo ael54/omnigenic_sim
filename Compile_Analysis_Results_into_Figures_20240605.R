@@ -10,50 +10,9 @@ home.dir <- getwd()
 library('MASS')
 library(gplots)
 library(sommer)
+library(reshape)
+library(ggplot2)
 
-#######################################################
-#######################################################
-#######################################################
-#Experimental code - delete once a pipeline has been developed
-# maybe consider putting this into a function
-factor.A <- 1
-factor.B <- 0.05
-factor.C <- 0.05
-factor.D <- 0.05
-this.rep <- 2
-
-this.setting <-  paste(factor.A,".FactorA..",factor.B, ".FactorB..",
-                       factor.C,".FactorC..",factor.D,".FactorD..",
-                       this.rep, ".Rep", sep = "")
-
-#Extract the results we want
-results.this.setting <- these.spearman.rank.correlation.between.GWAS.core.QTNs[which(names(these.spearman.rank.correlation.between.GWAS.core.QTNs)
-                                                                                     == this.setting)]
-
-
-#Put the results into a format that we can extract the numbers from                                                                                                                                                                        == this.setting)]
-results.this.setting.for.figure <- matrix(unlist(results.this.setting), nrow = 3)
-
-#Some temporary code for testing out the nested for loop below
-#i <- 1
-#j <- 0.05
-#k <- 0.05
-#el <- 0.05
-#rep <- 1
-
-data.for.boxplot <- data.frame(spearman.rank.vector, factor.A.vector,
-                               factor.B.vector, factor.C.vector,
-                               factor.D.vector, rep.vector,
-                               pop.A.vector, pop.B.vector)
-View(data.for.boxplot)
-#End the temporary code for testing out the nested for loop below
-
-
-#End experimental code
-#######################################################
-#######################################################
-#######################################################
-#######################################################
 
 #######################################################
 ### Results for the core QTL
@@ -140,7 +99,7 @@ par(mfrow = c(3,4))
         
         boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
                 data.for.boxplot.these.two.pops$factor.A.vector, col = "Red", ylim = c(-1,1),
-                xlab = "Level of Factor A", ylab = paste("Spearman rank between populations ",
+                xlab = "Cor Add vs Per Add", ylab = paste("Spearman rank between populations ",
                                                          this.pop.a, " and ", this.pop.b, sep = ""))
         points(c(1:length(means)), means, pch = 3, cex = 0.75)
   
@@ -151,7 +110,7 @@ par(mfrow = c(3,4))
         
         boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
                   data.for.boxplot.these.two.pops$factor.B.vector, col = "Red", ylim = c(-1,1), 
-                xlab = "Level of Factor B", ylab = paste("Spearman rank between populations ",
+                xlab = "Cor Epi vs Cor Add", ylab = paste("Spearman rank between populations ",
                                                          this.pop.a, " and ", this.pop.b, sep = ""))
         points(c(1:length(means)), means, pch = 3, cex = 0.75)
   
@@ -162,7 +121,7 @@ par(mfrow = c(3,4))
         
         boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
                   data.for.boxplot.these.two.pops$factor.C.vector, col = "Red", ylim = c(-1,1), 
-                xlab = "Level of Factor C", ylab = paste("Spearman rank between populations ",
+                xlab = "Per Epi vs Per Add", ylab = paste("Spearman rank between populations ",
                                                          this.pop.a, " and ", this.pop.b, sep = ""))
         points(c(1:length(means)), means, pch = 3, cex = 0.75)
         
@@ -173,7 +132,7 @@ par(mfrow = c(3,4))
         
         boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
                   data.for.boxplot.these.two.pops$factor.D.vector, col = "Red", ylim = c(-1,1), 
-                xlab = "Level of Factor D", ylab = paste("Spearman rank between populations ",
+                xlab = "Btw Epi vs Per Add", ylab = paste("Spearman rank between populations ",
                                                          this.pop.a, " and ", this.pop.b, sep = ""))
         points(c(1:length(means)), means, pch = 3, cex = 0.75)
         
@@ -292,7 +251,7 @@ for(this.pop.a in 1:2){
     
     boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
               data.for.boxplot.these.two.pops$factor.A.vector, col = "Blue", ylim = c(-1,1),
-            xlab = "Level of Factor A", ylab = paste("Spearman rank between populations ",
+            xlab = "Cor Add vs Per Add", ylab = paste("Spearman rank between populations ",
                                                      this.pop.a, " and ", this.pop.b, sep = ""))
     points(c(1:length(means)), means, pch = 3, cex = 0.75)
     
@@ -303,7 +262,7 @@ for(this.pop.a in 1:2){
     
     boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
               data.for.boxplot.these.two.pops$factor.B.vector, col = "Blue", ylim = c(-1,1),
-            xlab = "Level of Factor B", ylab = paste("Spearman rank between populations ",
+            xlab = "Cor Epi vs Cor Add", ylab = paste("Spearman rank between populations ",
                                                      this.pop.a, " and ", this.pop.b, sep = ""))
     points(c(1:length(means)), means, pch = 3, cex = 0.75)
     
@@ -314,7 +273,7 @@ for(this.pop.a in 1:2){
     
     boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
               data.for.boxplot.these.two.pops$factor.C.vector, col = "Blue", ylim = c(-1,1),
-            xlab = "Level of Factor C", ylab = paste("Spearman rank between populations ",
+            xlab = "Per Epi vs Per Add", ylab = paste("Spearman rank between populations ",
                                                      this.pop.a, " and ", this.pop.b, sep = ""))
     points(c(1:length(means)), means, pch = 3, cex = 0.75)
     
@@ -325,7 +284,7 @@ for(this.pop.a in 1:2){
     
     boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
               data.for.boxplot.these.two.pops$factor.D.vector, col = "Blue", ylim = c(-1,1),
-            xlab = "Level of Factor D", ylab = paste("Spearman rank between populations ",
+            xlab = "Btw Epi vs Per Add", ylab = paste("Spearman rank between populations ",
                                                      this.pop.a, " and ", this.pop.b, sep = ""))
     points(c(1:length(means)), means, pch = 3, cex = 0.75)
     
@@ -383,7 +342,165 @@ dev.off()
 #######################################################################
 ### Results for the genomic prediction analysis
 #######################################################################
-#Make a plot of the improvement of prediciton accuarices after accounting for the omingenic model
+#######################################################
+#######################################################
+#######################################################
+#Experimental code - delete once a pipeline has been developed
+# maybe consider putting this into a function
+these.prediction.accuracies.QTNs <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/Master-Result-Lists-2024-06-13/master.these.prediction.accuracies.QTNs.RDS")
+
+validation.set.vector <- NULL
+training.set.1.boolean <- NULL
+training.set.2.boolean <- NULL
+predictive.ability.GBLUP <- NULL
+predictive.ability.Multi.Kern.add <- NULL
+predictive.ability.Multi.Kern.epi <- NULL
+factor.A.vector <- NULL
+factor.B.vector <- NULL
+factor.C.vector <- NULL
+factor.D.vector <- NULL
+this.rep.vector <- NULL
+
+
+factor.A <- 1
+factor.B <- 0.05
+factor.C <- 0.05
+factor.D <- 0.05
+this.rep <- 2
+
+this.setting <-  paste(factor.A,".FactorA..",factor.B, ".FactorB..",
+                       factor.C,".FactorC..",factor.D,".FactorD..",
+                       this.rep, ".Rep", sep = "")
+
+#Extract the results we want
+results.this.setting <- these.prediction.accuracies.QTNs[which(names(these.prediction.accuracies.QTNs)
+                                                               == this.setting)]
+
+
+#Put the results into a format that we can extract the numbers from                                                                                                                                                                        == this.setting)]
+results.this.setting.for.figure <- matrix(unlist(results.this.setting),nrow = 9)
+
+for(pred.abil in 1:nrow(results.this.setting.for.figure)){
+  validation.set.vector <- c(validation.set.vector, results.this.setting.for.figure[pred.abil, 1])
+  training.set.1.boolean <- c(training.set.1.boolean, results.this.setting.for.figure[pred.abil, 2])
+  training.set.2.boolean <- c(training.set.2.boolean, results.this.setting.for.figure[pred.abil, 3])
+  predictive.ability.GBLUP <- c(predictive.ability.GBLUP, results.this.setting.for.figure[pred.abil, 4])
+  predictive.ability.Multi.Kern.add <- c(predictive.ability.Multi.Kern.add, results.this.setting.for.figure[pred.abil, 5])
+  predictive.ability.Multi.Kern.epi <- c(predictive.ability.Multi.Kern.epi, results.this.setting.for.figure[pred.abil, 6])
+}
+
+factor.A.vector <- c(factor.A.vector, rep(factor.A, nrow(results.this.setting.for.figure)))
+factor.B.vector <- c(factor.B.vector, rep(factor.B, nrow(results.this.setting.for.figure)))
+factor.C.vector <- c(factor.C.vector, rep(factor.C, nrow(results.this.setting.for.figure)))
+factor.D.vector <- c(factor.D.vector, rep(factor.D, nrow(results.this.setting.for.figure)))
+rep.vector <- c(rep.vector, rep(this.rep, nrow(results.this.setting.for.figure)))
+
+
+data.for.boxplot <- data.frame(validation.set.vector, training.set.1.boolean, 
+                               training.set.2.boolean, predictive.ability.GBLUP,
+                               predictive.ability.Multi.Kern.add, predictive.ability.Multi.Kern.epi,
+                               factor.A.vector, factor.B.vector, factor.C.vector, factor.D.vector,
+                               this.rep.vector)
+#Create a different row of box plots
+
+this.validation.pop <- 1
+data.for.boxplot.this.validation.pop <- data.for.boxplot[which(data.for.boxplot$validation.set.vector == this.validation.pop ),]
+
+#Melt the data
+data.for.boxplot.this.validation.pop.melted <- melt(data = data.for.boxplot.this.validation.pop,
+                                                    measure.vars = c("predictive.ability.GBLUP",
+                                                                     "predictive.ability.Multi.Kern.add",
+                                                                     "predictive.ability.Multi.Kern.epi"))
+box.plot.var <- paste("1.if.pop.1.in.train = ",data.for.boxplot.this.validation.pop.melted$training.set.1.boolean,
+                      "..1.if.pop.2.in.train = ",data.for.boxplot.this.validation.pop.melted$training.set.2.boolean,
+                      "..", data.for.boxplot.this.validation.pop.melted$variable, sep = "")
+
+data.for.boxplot.this.validation.pop.melted <- data.frame(data.for.boxplot.this.validation.pop.melted,
+                                                          box.plot.var)
+pdf("Box.plot.of.Prediciton.Accuracies.pdf", width = 20)
+#Create the box plot
+ggplot(data.for.boxplot.this.validation.pop.melted, aes(x=as.factor(factor.A.vector), 
+                                                        y=value, fill=box.plot.var)) + geom_boxplot()
+dev.off()
+#######################################################
+#End Experimental code - delete once a pipeline has been developed
+
+
+#####Get all of the results into an object that can be used to 
+# make the box plots you want
+validation.set.vector <- NULL
+training.set.1.boolean <- NULL
+training.set.2.boolean <- NULL
+predictive.ability.GBLUP <- NULL
+predictive.ability.Multi.Kern.add <- NULL
+predictive.ability.Multi.Kern.epi <- NULL
+factor.A.vector <- NULL
+factor.B.vector <- NULL
+factor.C.vector <- NULL
+factor.D.vector <- NULL
+rep.vector <- NULL
+
+for(i in c(1,2,4)){
+  for(j in c(0.05,0.5,1,2)){
+    for(k in c(0.05,0.5,1,2)){
+      for(el in c(0.05,0.5,1,2)){
+        for(rep in 1:3){
+          #Get the object from the list you want
+          factor.A <- i
+          factor.B <- j
+          factor.C <- k
+          factor.D <- el 
+          this.rep <- rep
+          
+          this.setting <-  paste(factor.A,".FactorA..",factor.B, ".FactorB..",
+                                 factor.C,".FactorC..",factor.D,".FactorD..",
+                                 this.rep, ".Rep", sep = "")
+          
+          #Extract the results we want
+          results.this.setting <- these.prediction.accuracies.QTNs[which(names(these.prediction.accuracies.QTNs)
+                                                                         == this.setting)]
+          
+          
+          #Put the results into a format that we can extract the numbers from                                                                                                                                                                        == this.setting)]
+          results.this.setting.for.figure <- matrix(unlist(results.this.setting),nrow = 9)
+          
+          for(pred.abil in 1:nrow(results.this.setting.for.figure)){
+            validation.set.vector <- c(validation.set.vector, results.this.setting.for.figure[pred.abil, 1])
+            training.set.1.boolean <- c(training.set.1.boolean, results.this.setting.for.figure[pred.abil, 2])
+            training.set.2.boolean <- c(training.set.2.boolean, results.this.setting.for.figure[pred.abil, 3])
+            predictive.ability.GBLUP <- c(predictive.ability.GBLUP, results.this.setting.for.figure[pred.abil, 4])
+            predictive.ability.Multi.Kern.add <- c(predictive.ability.Multi.Kern.add, results.this.setting.for.figure[pred.abil, 5])
+            predictive.ability.Multi.Kern.epi <- c(predictive.ability.Multi.Kern.epi, results.this.setting.for.figure[pred.abil, 6])
+          }#End for(pred.abil in 1:nrow(results.this.setting.for.figure))
+          
+          factor.A.vector <- c(factor.A.vector, rep(factor.A, nrow(results.this.setting.for.figure)))
+          factor.B.vector <- c(factor.B.vector, rep(factor.B, nrow(results.this.setting.for.figure)))
+          factor.C.vector <- c(factor.C.vector, rep(factor.C, nrow(results.this.setting.for.figure)))
+          factor.D.vector <- c(factor.D.vector, rep(factor.D, nrow(results.this.setting.for.figure)))
+          rep.vector <- c(rep.vector, rep(this.rep, nrow(results.this.setting.for.figure)))
+          
+        }#End for(rep in 1:3)
+      }#End for(el in 1:4)
+    }#End for(k in 1:4)
+  }#End for(j in 1:4)
+}#End for(i in 1:3)
+
+data.for.boxplot <- data.frame(validation.set.vector, training.set.1.boolean, 
+                               training.set.2.boolean, predictive.ability.GBLUP,
+                               predictive.ability.Multi.Kern.add, predictive.ability.Multi.Kern.epi,
+                               factor.A.vector, factor.B.vector, factor.C.vector, factor.D.vector,
+                               rep.vector)
+
+View(data.for.boxplot)
+
+
+#######################################################
+#######################################################
+#######################################################
+#######################################################
+
+
+#Make a plot of the prediction accuarices after accounting for the omingenic model
 #Initiate the plot
   #For loop through the model that considers epsitasis versus the one that does not
     #For loop through the main effects of Factors A-D
