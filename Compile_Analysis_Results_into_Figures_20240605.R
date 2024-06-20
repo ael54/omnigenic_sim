@@ -449,7 +449,7 @@ data.for.boxplot.this.validation.pop.melted.both.pop.train<- data.for.boxplot.th
     (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.2.boolean == 1)),]
 
 
-pdf("Box.plot.of.Prediciton.Accuracies.Separate.Plot.for.Train.Sets.pdf", width = 20)
+pdf("Box.plot.of.Prediciton.Accuracies.Separate.Plot.for.Train.Sets.take.2.pdf", width = 20)
 #Create the box plot
 ggplot(data.for.boxplot.this.validation.pop.melted.first.pop.train, aes(x=as.factor(factor.A.vector), 
                                                                    y=value, fill=variable.truncated)) + 
@@ -550,8 +550,6 @@ data.for.boxplot <- data.frame(validation.set.vector, training.set.1.boolean,
 #######################################################
 #######################################################
 #######################################################
-#Source in the code below that will help make these plots
-source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
 
 ######Make a lattice plot of prediction accuracies. Rows = different training populations
 # populations. Columns = Factors. X-axis = Factor levels, Y-axis = Prediction accuracies
@@ -563,9 +561,59 @@ for(val.pop in 1:length(unique(data.for.boxplot$validation.set.vector))){
   #Source in code that will make each row of the plot
     #Input parameters = data set for boxplot, variable indicate what the validation popluation is,
                       #variable indicating which training set it is
-    source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
+  #Source in the code that will create separate data sets for each combination of
+  # training sets.
+  title.label <- paste("Val pop = ", val.pop, sep = "")
+  source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Format_the_data_for_Box_Plots.R")
+  
+  
+  #########Make the first row of the plot
+  #Source in the code below that will help make these plots
+  input.box.plot.data <- data.for.boxplot.this.validation.pop.melted.first.pop.train
+  y.axis.label <- "1st pop as TS"
+  
+  #Source in some gplot code that will make the plots, and save them as objects
+  source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
+  fa.row.1 <- fa
+  fb.row.1 <- fb
+  fc.row.1 <- fc
+  fd.row.1 <- fd
+  
+  #########Make the second row of the plot
+  #Source in the code below that will help make these plots
+  input.box.plot.data <- data.for.boxplot.this.validation.pop.melted.second.pop.train
+  y.axis.label <- "Pred Abil - 2nd pop as TS"
+  
+  #Source in some gplot code that will make the plots, and save them as objects
+  source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
+  fa.row.2 <- fa
+  fb.row.2 <- fb
+  fc.row.2 <- fc
+  fd.row.2 <- fd
+  
+  #########Make the third row of the plot
+  #Source in the code below that will help make these plots
+  input.box.plot.data <- data.for.boxplot.this.validation.pop.melted.both.pop.train
+  y.axis.label <- "Pred Abil - Both pops as TS"
+  
+  #Source in some gplot code that will make the plots, and save them as objects
+  source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
+  fa.row.3 <- fa
+  fb.row.3 <- fb
+  fc.row.3 <- fc
+  fd.row.3 <- fd
+  
+  #put everything into a box plot
+  
+  pdf("Box.plot.of.Prediciton.Accuracies.Experimental.20240620.pdf", width = 50)
+  plot_grid(fa.row.1, fb.row.1, fc.row.1, fd.row.1,
+            fa.row.2, fb.row.2, fc.row.2, fd.row.2,
+            fa.row.3, fb.row.3, fc.row.3, fd.row.3,
+            nrow = 3, ncol = 4)
+  dev.off()
 
-  #Plot everything for the 
+  
+  #########Make the second row of the plot
 }#End (val.pop in 1:length(unique(data.for.boxplot$validation.set.vector)))
   #End the plot
 

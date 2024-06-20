@@ -1,21 +1,32 @@
+#Make a box plot for Factor A  
+fa <- ggplot(input.box.plot.data, aes(x=as.factor(factor.A.vector), 
+                                y=value, fill=variable.truncated)) + 
+  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25),
+                         plot.title = element_text(size = 30), legend.position = "none")+
+  labs(title = title.label, x="Cor Add vs Per Add", y = y.axis.label, size = 25)
+
+#Make a box plot for Factor B  
+fb <- ggplot(input.box.plot.data, aes(x=as.factor(factor.B.vector), 
+                                y=value, fill=variable.truncated)) + 
+  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25),
+                         plot.title = element_text(size = 30), legend.position = "none")+
+  labs(title =  title.label, x="Cor Epi vs Cor Add", y = y.axis.label, size = 25)
+
+#Make a box plot for Factor C  
+fc <- ggplot(input.box.plot.data, aes(x=as.factor(factor.C.vector), 
+                                y=value, fill=variable.truncated)) + 
+  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25),
+                         plot.title = element_text(size = 30), legend.position = "none")+
+  labs(title =  title.label, x="Per Epi vs Per Add", y = y.axis.label, size = 25)
+
+#Make a box plot for Factor D 
+fd <- ggplot(input.box.plot.data, aes(x=as.factor(factor.D.vector), 
+                                y=value, fill=variable.truncated)) + 
+  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25),
+                         plot.title = element_text(size = 30), legend.text = element_text(size = 20))+
+  labs(title =  title.label, x="Btw Epi vs Per Add", y = y.axis.label, size = 25)
 
 
-#####This code is in the process of being written
 
-val.pop <- 1 #The index of the for loop through validation populations
-#Next idea: have separate graphs per each training set
-data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop <- melt(data = data.for.boxplot.this.validation.pop,
-                                                                           measure.vars = c("predictive.ability.GBLUP",
-                                                                                            "predictive.ability.Multi.Kern.add",
-                                                                                            "predictive.ability.Multi.Kern.epi"))
-variable.truncated <- substr(data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$variable,start = 20, stop = 3000)
-data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop <- data.frame(data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop, variable.truncated)
-
-
-  #Make a box plot for Factor A  
+ 
   
-  #Make a box plot for Factor B  
-  
-  #Make a box plot for Factor C  
-  
-  #Make a box plot for Factor D  
