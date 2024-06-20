@@ -349,17 +349,6 @@ dev.off()
 # maybe consider putting this into a function
 these.prediction.accuracies.QTNs <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/Master-Result-Lists-2024-06-13/master.these.prediction.accuracies.QTNs.RDS")
 
-validation.set.vector <- NULL
-training.set.1.boolean <- NULL
-training.set.2.boolean <- NULL
-predictive.ability.GBLUP <- NULL
-predictive.ability.Multi.Kern.add <- NULL
-predictive.ability.Multi.Kern.epi <- NULL
-factor.A.vector <- NULL
-factor.B.vector <- NULL
-factor.C.vector <- NULL
-factor.D.vector <- NULL
-this.rep.vector <- NULL
 
 
 factor.A <- 1
@@ -368,43 +357,14 @@ factor.C <- 0.05
 factor.D <- 0.05
 this.rep <- 2
 
-this.setting <-  paste(factor.A,".FactorA..",factor.B, ".FactorB..",
-                       factor.C,".FactorC..",factor.D,".FactorD..",
-                       this.rep, ".Rep", sep = "")
 
-#Extract the results we want
-results.this.setting <- these.prediction.accuracies.QTNs[which(names(these.prediction.accuracies.QTNs)
-                                                               == this.setting)]
-
-
-#Put the results into a format that we can extract the numbers from                                                                                                                                                                        == this.setting)]
-results.this.setting.for.figure <- matrix(unlist(results.this.setting),nrow = 9)
-
-for(pred.abil in 1:nrow(results.this.setting.for.figure)){
-  validation.set.vector <- c(validation.set.vector, results.this.setting.for.figure[pred.abil, 1])
-  training.set.1.boolean <- c(training.set.1.boolean, results.this.setting.for.figure[pred.abil, 2])
-  training.set.2.boolean <- c(training.set.2.boolean, results.this.setting.for.figure[pred.abil, 3])
-  predictive.ability.GBLUP <- c(predictive.ability.GBLUP, results.this.setting.for.figure[pred.abil, 4])
-  predictive.ability.Multi.Kern.add <- c(predictive.ability.Multi.Kern.add, results.this.setting.for.figure[pred.abil, 5])
-  predictive.ability.Multi.Kern.epi <- c(predictive.ability.Multi.Kern.epi, results.this.setting.for.figure[pred.abil, 6])
-}
-
-factor.A.vector <- c(factor.A.vector, rep(factor.A, nrow(results.this.setting.for.figure)))
-factor.B.vector <- c(factor.B.vector, rep(factor.B, nrow(results.this.setting.for.figure)))
-factor.C.vector <- c(factor.C.vector, rep(factor.C, nrow(results.this.setting.for.figure)))
-factor.D.vector <- c(factor.D.vector, rep(factor.D, nrow(results.this.setting.for.figure)))
-rep.vector <- c(rep.vector, rep(this.rep, nrow(results.this.setting.for.figure)))
-
-
-data.for.boxplot <- data.frame(validation.set.vector, training.set.1.boolean, 
-                               training.set.2.boolean, predictive.ability.GBLUP,
-                               predictive.ability.Multi.Kern.add, predictive.ability.Multi.Kern.epi,
-                               factor.A.vector, factor.B.vector, factor.C.vector, factor.D.vector,
-                               this.rep.vector)
-#Create a different row of box plots
-
+##################################
+#Here begins the code for making the boxplots of prediciton accuracies
 this.validation.pop <- 1
 data.for.boxplot.this.validation.pop <- data.for.boxplot[which(data.for.boxplot$validation.set.vector == this.validation.pop ),]
+data.for.boxplot.this.validation.pop <- na.omit(data.for.boxplot.this.validation.pop)
+
+
 
 #Melt the data
 data.for.boxplot.this.validation.pop.melted <- melt(data = data.for.boxplot.this.validation.pop,
@@ -415,13 +375,106 @@ box.plot.var <- paste("1.if.pop.1.in.train = ",data.for.boxplot.this.validation.
                       "..1.if.pop.2.in.train = ",data.for.boxplot.this.validation.pop.melted$training.set.2.boolean,
                       "..", data.for.boxplot.this.validation.pop.melted$variable, sep = "")
 
+
+
 data.for.boxplot.this.validation.pop.melted <- data.frame(data.for.boxplot.this.validation.pop.melted,
                                                           box.plot.var)
-pdf("Box.plot.of.Prediciton.Accuracies.pdf", width = 20)
-#Create the box plot
-ggplot(data.for.boxplot.this.validation.pop.melted, aes(x=as.factor(factor.A.vector), 
-                                                        y=value, fill=box.plot.var)) + geom_boxplot()
+
+#####Original_Idea - plot the predictive ability of all 3 models for all 3 possible training sets ()
+pdf("Box.plot.of.Prediciton.Accuracies.original.idea.pdf", width = 20)
+  #Create the box plot
+  ggplot(data.for.boxplot.this.validation.pop.melted, aes(x=as.factor(factor.A.vector), 
+                                                          y=value, fill=box.plot.var)) + 
+                                                  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25))+
+                                                  labs(x="Cor Add vs Per Add", y = "Pred. Ability", size = 25)
+
 dev.off()
+
+
+#Next idea: change the Y-axis to improvement in predictive ability relative to a GBLUP model
+PA.Add.Mult.Kern.Minus.PA.GBLUP <- data.for.boxplot.this.validation.pop$predictive.ability.Multi.Kern.add-
+  data.for.boxplot.this.validation.pop$predictive.ability.GBLUP
+
+PA.Epi.Mult.Kern.Minus.PA.GBLUP <- data.for.boxplot.this.validation.pop$predictive.ability.Multi.Kern.epi-
+  data.for.boxplot.this.validation.pop$predictive.ability.GBLUP
+
+data.for.boxplot.this.validation.pop <- data.frame(data.for.boxplot.this.validation.pop,
+                                                   PA.Add.Mult.Kern.Minus.PA.GBLUP,
+                                                   PA.Epi.Mult.Kern.Minus.PA.GBLUP)
+
+data.for.boxplot.this.validation.pop.melted.diff.in.PA <- melt(data = data.for.boxplot.this.validation.pop,
+                                                    measure.vars = c("PA.Add.Mult.Kern.Minus.PA.GBLUP",
+                                                                     "PA.Epi.Mult.Kern.Minus.PA.GBLUP"))
+
+box.plot.var <- paste("1.if.pop.1.in.train = ",data.for.boxplot.this.validation.pop.melted.diff.in.PA$training.set.1.boolean,
+                      "..1.if.pop.2.in.train = ",data.for.boxplot.this.validation.pop.melted.diff.in.PA$training.set.2.boolean,
+                      "..", data.for.boxplot.this.validation.pop.melted.diff.in.PA$variable, sep = "")
+
+
+
+data.for.boxplot.this.validation.pop.melted.diff.in.PA <- data.frame(data.for.boxplot.this.validation.pop.melted.diff.in.PA,
+                                                          box.plot.var)
+
+
+pdf("Box.plot.of.Prediciton.Accuracies.Mult.Kern.Minus.GBLUP.pdf", width = 20)
+#Create the box plot
+ggplot(data.for.boxplot.this.validation.pop.melted.diff.in.PA, aes(x=as.factor(factor.A.vector), 
+                                                        y=value, fill=box.plot.var)) + 
+  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25))+
+  labs(x="Cor Add vs Per Add", y = "Mult Kern PA Minus GBLUP PA", size = 25)
+
+dev.off()
+
+
+#Next idea: have separate graphs per each training set
+data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop <- melt(data = data.for.boxplot.this.validation.pop,
+                                                                           measure.vars = c("predictive.ability.GBLUP",
+                                                                                            "predictive.ability.Multi.Kern.add",
+                                                                                            "predictive.ability.Multi.Kern.epi"))
+variable.truncated <- substr(data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$variable,start = 20, stop = 3000)
+data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop <- data.frame(data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop, variable.truncated)
+
+
+
+data.for.boxplot.this.validation.pop.melted.first.pop.train <- data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop[which(
+  (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.1.boolean == 1)&
+    (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.2.boolean == 0)),]
+
+data.for.boxplot.this.validation.pop.melted.second.pop.train<- data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop[which(
+  (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.1.boolean == 0)&
+    (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.2.boolean == 1)),]
+
+data.for.boxplot.this.validation.pop.melted.both.pop.train<- data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop[which(
+  (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.1.boolean == 1)&
+    (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.2.boolean == 1)),]
+
+
+pdf("Box.plot.of.Prediciton.Accuracies.Separate.Plot.for.Train.Sets.pdf", width = 20)
+#Create the box plot
+ggplot(data.for.boxplot.this.validation.pop.melted.first.pop.train, aes(x=as.factor(factor.A.vector), 
+                                                                   y=value, fill=variable.truncated)) + 
+  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25),
+                         plot.title = element_text(size = 30), legend.text = element_text(size = 20))+
+  labs(title = "First Pop as Training Set", x="Cor Add vs Per Add", y = "Predictive Ability", size = 25)
+
+
+ggplot(data.for.boxplot.this.validation.pop.melted.second.pop.train, aes(x=as.factor(factor.A.vector), 
+                                                                        y=value, fill=variable.truncated)) + 
+  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25),
+                         plot.title = element_text(size = 30), legend.text = element_text(size = 20))+
+  labs(title = "Second Pop as Training Set", x="Cor Add vs Per Add", y = "Predictive Ability", size = 25)
+
+
+ggplot(data.for.boxplot.this.validation.pop.melted.both.pop.train, aes(x=as.factor(factor.A.vector), 
+                                                                         y=value, fill=variable.truncated)) + 
+  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25),
+                         plot.title = element_text(size = 30), legend.text = element_text(size = 20))+
+  labs(title = "Both Pops as Training Set", x="Cor Add vs Per Add", y = "Predictive Ability", size = 25)
+
+
+dev.off()
+
+
 #######################################################
 #End Experimental code - delete once a pipeline has been developed
 
@@ -491,27 +544,30 @@ data.for.boxplot <- data.frame(validation.set.vector, training.set.1.boolean,
                                factor.A.vector, factor.B.vector, factor.C.vector, factor.D.vector,
                                rep.vector)
 
-View(data.for.boxplot)
 
 
 #######################################################
 #######################################################
 #######################################################
 #######################################################
+#Source in the code below that will help make these plots
+source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
 
-
-#Make a plot of the prediction accuarices after accounting for the omingenic model
+######Make a lattice plot of prediction accuracies. Rows = different training populations
+# populations. Columns = Factors. X-axis = Factor levels, Y-axis = Prediction accuracies
+# Separate box plots (on each plot) for each model investigated
 #Initiate the plot
-  #For loop through the model that considers epsitasis versus the one that does not
-    #For loop through the main effects of Factors A-D
-      #For loop through the different levels of Factor i
-         ####
-         # Plot the improvement in prediction accuracy over a standard GBLUP model
-         ### Against factor levels (X-axis)
-      #For loop through the different levels of Factor i
-    #End for loop through the main effects of Factors A-D
-  #End for loop through the model that considers epsitasis versus the one that does not
-#End the plot
+#for loop through each page of plots (validation population)
+for(val.pop in 1:length(unique(data.for.boxplot$validation.set.vector))){
+ #For loop through each row (training sets)
+  #Source in code that will make each row of the plot
+    #Input parameters = data set for boxplot, variable indicate what the validation popluation is,
+                      #variable indicating which training set it is
+    source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
+
+  #Plot everything for the 
+}#End (val.pop in 1:length(unique(data.for.boxplot$validation.set.vector)))
+  #End the plot
 
 
 
