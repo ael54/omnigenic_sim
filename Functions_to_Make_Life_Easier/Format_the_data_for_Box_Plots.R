@@ -1,5 +1,3 @@
-#Delete the code below
-val.pop <- 1 #The index of the for loop through validation populations
 
 
 ###Format the data for boxplot so that a plot can be made out of them

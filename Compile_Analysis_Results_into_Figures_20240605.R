@@ -349,136 +349,6 @@ dev.off()
 # maybe consider putting this into a function
 these.prediction.accuracies.QTNs <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/Master-Result-Lists-2024-06-13/master.these.prediction.accuracies.QTNs.RDS")
 
-
-
-factor.A <- 1
-factor.B <- 0.05
-factor.C <- 0.05
-factor.D <- 0.05
-this.rep <- 2
-
-
-##################################
-#Here begins the code for making the boxplots of prediciton accuracies
-this.validation.pop <- 1
-data.for.boxplot.this.validation.pop <- data.for.boxplot[which(data.for.boxplot$validation.set.vector == this.validation.pop ),]
-data.for.boxplot.this.validation.pop <- na.omit(data.for.boxplot.this.validation.pop)
-
-
-
-#Melt the data
-data.for.boxplot.this.validation.pop.melted <- melt(data = data.for.boxplot.this.validation.pop,
-                                                    measure.vars = c("predictive.ability.GBLUP",
-                                                                     "predictive.ability.Multi.Kern.add",
-                                                                     "predictive.ability.Multi.Kern.epi"))
-box.plot.var <- paste("1.if.pop.1.in.train = ",data.for.boxplot.this.validation.pop.melted$training.set.1.boolean,
-                      "..1.if.pop.2.in.train = ",data.for.boxplot.this.validation.pop.melted$training.set.2.boolean,
-                      "..", data.for.boxplot.this.validation.pop.melted$variable, sep = "")
-
-
-
-data.for.boxplot.this.validation.pop.melted <- data.frame(data.for.boxplot.this.validation.pop.melted,
-                                                          box.plot.var)
-
-#####Original_Idea - plot the predictive ability of all 3 models for all 3 possible training sets ()
-pdf("Box.plot.of.Prediciton.Accuracies.original.idea.pdf", width = 20)
-  #Create the box plot
-  ggplot(data.for.boxplot.this.validation.pop.melted, aes(x=as.factor(factor.A.vector), 
-                                                          y=value, fill=box.plot.var)) + 
-                                                  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25))+
-                                                  labs(x="Cor Add vs Per Add", y = "Pred. Ability", size = 25)
-
-dev.off()
-
-
-#Next idea: change the Y-axis to improvement in predictive ability relative to a GBLUP model
-PA.Add.Mult.Kern.Minus.PA.GBLUP <- data.for.boxplot.this.validation.pop$predictive.ability.Multi.Kern.add-
-  data.for.boxplot.this.validation.pop$predictive.ability.GBLUP
-
-PA.Epi.Mult.Kern.Minus.PA.GBLUP <- data.for.boxplot.this.validation.pop$predictive.ability.Multi.Kern.epi-
-  data.for.boxplot.this.validation.pop$predictive.ability.GBLUP
-
-data.for.boxplot.this.validation.pop <- data.frame(data.for.boxplot.this.validation.pop,
-                                                   PA.Add.Mult.Kern.Minus.PA.GBLUP,
-                                                   PA.Epi.Mult.Kern.Minus.PA.GBLUP)
-
-data.for.boxplot.this.validation.pop.melted.diff.in.PA <- melt(data = data.for.boxplot.this.validation.pop,
-                                                    measure.vars = c("PA.Add.Mult.Kern.Minus.PA.GBLUP",
-                                                                     "PA.Epi.Mult.Kern.Minus.PA.GBLUP"))
-
-box.plot.var <- paste("1.if.pop.1.in.train = ",data.for.boxplot.this.validation.pop.melted.diff.in.PA$training.set.1.boolean,
-                      "..1.if.pop.2.in.train = ",data.for.boxplot.this.validation.pop.melted.diff.in.PA$training.set.2.boolean,
-                      "..", data.for.boxplot.this.validation.pop.melted.diff.in.PA$variable, sep = "")
-
-
-
-data.for.boxplot.this.validation.pop.melted.diff.in.PA <- data.frame(data.for.boxplot.this.validation.pop.melted.diff.in.PA,
-                                                          box.plot.var)
-
-
-pdf("Box.plot.of.Prediciton.Accuracies.Mult.Kern.Minus.GBLUP.pdf", width = 20)
-#Create the box plot
-ggplot(data.for.boxplot.this.validation.pop.melted.diff.in.PA, aes(x=as.factor(factor.A.vector), 
-                                                        y=value, fill=box.plot.var)) + 
-  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25))+
-  labs(x="Cor Add vs Per Add", y = "Mult Kern PA Minus GBLUP PA", size = 25)
-
-dev.off()
-
-
-#Next idea: have separate graphs per each training set
-data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop <- melt(data = data.for.boxplot.this.validation.pop,
-                                                                           measure.vars = c("predictive.ability.GBLUP",
-                                                                                            "predictive.ability.Multi.Kern.add",
-                                                                                            "predictive.ability.Multi.Kern.epi"))
-variable.truncated <- substr(data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$variable,start = 20, stop = 3000)
-data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop <- data.frame(data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop, variable.truncated)
-
-
-
-data.for.boxplot.this.validation.pop.melted.first.pop.train <- data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop[which(
-  (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.1.boolean == 1)&
-    (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.2.boolean == 0)),]
-
-data.for.boxplot.this.validation.pop.melted.second.pop.train<- data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop[which(
-  (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.1.boolean == 0)&
-    (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.2.boolean == 1)),]
-
-data.for.boxplot.this.validation.pop.melted.both.pop.train<- data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop[which(
-  (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.1.boolean == 1)&
-    (data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$training.set.2.boolean == 1)),]
-
-
-pdf("Box.plot.of.Prediciton.Accuracies.Separate.Plot.for.Train.Sets.take.2.pdf", width = 20)
-#Create the box plot
-ggplot(data.for.boxplot.this.validation.pop.melted.first.pop.train, aes(x=as.factor(factor.A.vector), 
-                                                                   y=value, fill=variable.truncated)) + 
-  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25),
-                         plot.title = element_text(size = 30), legend.text = element_text(size = 20))+
-  labs(title = "First Pop as Training Set", x="Cor Add vs Per Add", y = "Predictive Ability", size = 25)
-
-
-ggplot(data.for.boxplot.this.validation.pop.melted.second.pop.train, aes(x=as.factor(factor.A.vector), 
-                                                                        y=value, fill=variable.truncated)) + 
-  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25),
-                         plot.title = element_text(size = 30), legend.text = element_text(size = 20))+
-  labs(title = "Second Pop as Training Set", x="Cor Add vs Per Add", y = "Predictive Ability", size = 25)
-
-
-ggplot(data.for.boxplot.this.validation.pop.melted.both.pop.train, aes(x=as.factor(factor.A.vector), 
-                                                                         y=value, fill=variable.truncated)) + 
-  geom_boxplot() + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25),
-                         plot.title = element_text(size = 30), legend.text = element_text(size = 20))+
-  labs(title = "Both Pops as Training Set", x="Cor Add vs Per Add", y = "Predictive Ability", size = 25)
-
-
-dev.off()
-
-
-#######################################################
-#End Experimental code - delete once a pipeline has been developed
-
-
 #####Get all of the results into an object that can be used to 
 # make the box plots you want
 validation.set.vector <- NULL
@@ -556,68 +426,73 @@ data.for.boxplot <- data.frame(validation.set.vector, training.set.1.boolean,
 # Separate box plots (on each plot) for each model investigated
 #Initiate the plot
 #for loop through each page of plots (validation population)
-for(val.pop in 1:length(unique(data.for.boxplot$validation.set.vector))){
- #For loop through each row (training sets)
-  #Source in code that will make each row of the plot
-    #Input parameters = data set for boxplot, variable indicate what the validation popluation is,
-                      #variable indicating which training set it is
-  #Source in the code that will create separate data sets for each combination of
-  # training sets.
-  title.label <- paste("Val pop = ", val.pop, sep = "")
-  source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Format_the_data_for_Box_Plots.R")
+all.three.pops <- 1:length(unique(data.for.boxplot$validation.set.vector))
+pdf("Box.plot.of.Prediciton.Accuracies.Experimental.20240709.pdf", width = 50)
+  for(val.pop in all.three.pops){
+   #For loop through each row (training sets)
+    #Source in code that will make each row of the plot
+      #Input parameters = data set for boxplot, variable indicate what the validation popluation is,
+                        #variable indicating which training set it is
+    #Source in the code that will create separate data sets for each combination of
+    # training sets.
+     
+    these.two.training.sets <- all.three.pops[which(all.three.pops != val.pop)] 
+    title.label <- paste("Val pop = ", val.pop, sep = "")
+    source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Format_the_data_for_Box_Plots.R")
+    
+    
+    #########Make the first row of the plot
+    #Source in the code below that will help make these plots
+    input.box.plot.data <- data.for.boxplot.this.validation.pop.melted.first.pop.train
+    y.axis.label <- paste("Pop ",these.two.training.sets[1], " TS", sep = "")
+    this.min.y.axis <- min(data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$value)
+    this.max.y.axis <- max(data.for.boxplot.this.validation.pop.melted.sep.for.each.train.pop$value)
+    #Source in some gplot code that will make the plots, and save them as objects
+    source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
+    fa.row.1 <- fa
+    fb.row.1 <- fb
+    fc.row.1 <- fc
+    fd.row.1 <- fd
+    
+    #########Make the second row of the plot
+    #Source in the code below that will help make these plots
+    input.box.plot.data <- data.for.boxplot.this.validation.pop.melted.second.pop.train
+    y.axis.label <- paste("Pop ",these.two.training.sets[2], " TS", sep = "")
+    title.label <- NA
+    
+    #Source in some gplot code that will make the plots, and save them as objects
+    source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
+    fa.row.2 <- fa
+    fb.row.2 <- fb
+    fc.row.2 <- fc
+    fd.row.2 <- fd
+    
+    #########Make the third row of the plot
+    #Source in the code below that will help make these plots
+    input.box.plot.data <- data.for.boxplot.this.validation.pop.melted.both.pop.train
+    y.axis.label <- paste("Pop ",these.two.training.sets[1], "+", these.two.training.sets[2], " TS", sep = "") 
+    
+    #Source in some gplot code that will make the plots, and save them as objects
+    source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
+    fa.row.3 <- fa
+    fb.row.3 <- fb
+    fc.row.3 <- fc
+    fd.row.3 <- fd
+    
+    #put everything into a box plot
+    
+   
+     print(plot_grid(fa.row.1, fb.row.1, fc.row.1, fd.row.1,
+              fa.row.2, fb.row.2, fc.row.2, fd.row.2,
+              fa.row.3, fb.row.3, fc.row.3, fd.row.3,
+              nrow = 3, ncol = 4))
   
   
-  #########Make the first row of the plot
-  #Source in the code below that will help make these plots
-  input.box.plot.data <- data.for.boxplot.this.validation.pop.melted.first.pop.train
-  y.axis.label <- "1st pop as TS"
-  
-  #Source in some gplot code that will make the plots, and save them as objects
-  source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
-  fa.row.1 <- fa
-  fb.row.1 <- fb
-  fc.row.1 <- fc
-  fd.row.1 <- fd
-  
-  #########Make the second row of the plot
-  #Source in the code below that will help make these plots
-  input.box.plot.data <- data.for.boxplot.this.validation.pop.melted.second.pop.train
-  y.axis.label <- "Pred Abil - 2nd pop as TS"
-  
-  #Source in some gplot code that will make the plots, and save them as objects
-  source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
-  fa.row.2 <- fa
-  fb.row.2 <- fb
-  fc.row.2 <- fc
-  fd.row.2 <- fd
-  
-  #########Make the third row of the plot
-  #Source in the code below that will help make these plots
-  input.box.plot.data <- data.for.boxplot.this.validation.pop.melted.both.pop.train
-  y.axis.label <- "Pred Abil - Both pops as TS"
-  
-  #Source in some gplot code that will make the plots, and save them as objects
-  source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_GS_Box_Plots_20240619.R")
-  fa.row.3 <- fa
-  fb.row.3 <- fb
-  fc.row.3 <- fc
-  fd.row.3 <- fd
-  
-  #put everything into a box plot
-  
-  pdf("Box.plot.of.Prediciton.Accuracies.Experimental.20240620.pdf", width = 50)
-  plot_grid(fa.row.1, fb.row.1, fc.row.1, fd.row.1,
-            fa.row.2, fb.row.2, fc.row.2, fd.row.2,
-            fa.row.3, fb.row.3, fc.row.3, fd.row.3,
-            nrow = 3, ncol = 4)
-  dev.off()
-
-  
-  #########Make the second row of the plot
-}#End (val.pop in 1:length(unique(data.for.boxplot$validation.set.vector)))
-  #End the plot
-
-
+    
+    #########Make the second row of the plot
+  }#End (val.pop in 1:length(unique(data.for.boxplot$validation.set.vector)))
+    #End the plot
+dev.off()
 
 
 ########################################################################
