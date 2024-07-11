@@ -285,6 +285,13 @@ dev.off()
 
 #########
 #Make a plot of the variance component estimates of trait 2
+#Read in the results for the trait values, genetic values, and breeding values
+vc.traits <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/results-var-covar-20240711/master.these.trait.var.covar.RDS") 
+vc.genetic.values <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/results-var-covar-20240711/master.these.genetic.value.var.covar.RDS")
+vc.breeding.values <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/results-var-covar-20240711/master.these.breeding.value.var.covar.RDS")
+#Format the results for trait values, genetic values, and breeding values so that they can be
+# used to make graphs
+
 #Initiate the plot
   #For loop through the pairs of phenotypic variance; genetic variance; breeding value variance
     #For loop through the main effects of Factors A-D
