@@ -15,7 +15,7 @@
   these.breeding.value.var.covar <- list()
   
   #Run the function that will conduct the simulations
-  source("Four_trait_trick_code/Four_trait_trick_Master_Script_20240711.R")
+  source("Four_trait_trick_code/Four_trait_trick_Master_Script_20240509.R")
   
  
   
