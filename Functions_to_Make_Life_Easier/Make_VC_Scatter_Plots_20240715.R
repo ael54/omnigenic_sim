@@ -1,5 +1,5 @@
 #Make a box plot for Factor A  
-title.label = "Trait 1"
+title.label = "Trait 1 -whole shebang"
 fa <- ggplot(input.scatter.plot.data, aes(x=generation.vector)) + 
              geom_point(col ="red", aes(y=trait.1.variance)) + ylim(this.min.y.axis,this.max.y.axis) +
   if(!is.na(title.label)) {
@@ -9,7 +9,7 @@ fa <- ggplot(input.scatter.plot.data, aes(x=generation.vector)) +
     labs(x= paste("Factor ", i, sep = ""), y = y.axis.label, size = 25)
   }
 
-title.label = "Trait 2"
+title.label = "Trait 2 - core component"
 fb <- ggplot(input.scatter.plot.data, aes(x=generation.vector)) + 
   geom_point(col ="red", aes(y=trait.2.variance)) +  ylim(this.min.y.axis,this.max.y.axis) +
   if(!is.na(title.label)) {
@@ -21,7 +21,7 @@ fb <- ggplot(input.scatter.plot.data, aes(x=generation.vector)) +
 
 
 
-title.label = "Trait 3"
+title.label = "Trait 3 - peripheral component"
 fc <- ggplot(input.scatter.plot.data, aes(x=generation.vector)) + 
   geom_point(col ="red", aes(y=trait.3.variance)) +  ylim(this.min.y.axis,this.max.y.axis) +
   if(!is.na(title.label)) {
@@ -32,7 +32,7 @@ fc <- ggplot(input.scatter.plot.data, aes(x=generation.vector)) +
   }
 
 
-title.label = "Trait 4"
+title.label = "Trait 4 - between core and perph"
 fd <- ggplot(input.scatter.plot.data, aes(x=generation.vector)) + 
   geom_point(col ="red", aes(y=trait.4.variance)) +  ylim(this.min.y.axis,this.max.y.axis) +
   if(!is.na(title.label)) {
@@ -43,7 +43,7 @@ fd <- ggplot(input.scatter.plot.data, aes(x=generation.vector)) +
   }
 
 #Temporary code
-pdf("VC.experimental.plot.pdf")
+pdf("VC.experimental.plot.pdf", width = 50)
 print(plot_grid(fa,fb,fc,fd,
                 nrow = 1, ncol = 4))
 dev.off()
