@@ -473,38 +473,70 @@ this.trait <- 1
 data.for.vc.scatterplot.this.factor.level <- data.for.vc.scatterplot[which(data.for.vc.scatterplot$factor.A.vector == i),]
 data.for.vc.scatterplot.this.factor.level.and.sel.level <- data.for.vc.scatterplot.this.factor.level[which((data.for.vc.scatterplot.this.factor.level$subpopulation.vector == "Founder")|
                                                                                 (data.for.vc.scatterplot.this.factor.level$subpopulation.vector == this.selection.type) ),]
-#data.for.vc.scatterplot.this.factor.level.and.sel.level <- data.for.vc.scatterplot.this.factor.level[which(data.for.vc.scatterplot.this.factor.level$subpopulation.vector == this.selection.type),]
-                                                                                                             #  
+this.factor <- 1
+this.level <- 1
 
-title.label <- NA 
+#data.for.vc.scatterplot.this.factor.level.and.sel.level <- data.for.vc.scatterplot.this.factor.level[which(data.for.vc.scatterplot.this.factor.level$subpopulation.vector == this.selection.type),]
+which(grepl("factor",
+            colnames(data.for.vc.scatterplot)))                                                                                                            #  
+
 #End troubleshooting code within the loop
 
-#Initiate the plot - for trait 1
-  #For loop through the factors; there will be one page per factor
-    #For loop through different kinds of breeding programs
-      #For loop through the different levels of Factor i (columns)
-       ####
-        # Plot variance component for trait 1 (Y-axis)
-        
+
+#For loop through the factors; index on "this.factor"
+for(this.factor in which(grepl("factor",colnames(data.for.vc.scatterplot)))){
+  #For loop through each level of the ith factor - there will be one pdf per factor (maybe create a subdirectory for this); index on "this.level"
+    #For loop through the different levels of Factor i (columns)
+     for(this.level in unique(data.for.vc.scatterplot[,this.factor])){
+       data.for.vc.scatterplot.this.factor.level <- data.for.vc.scatterplot[which(data.for.vc.scatterplot[,this.factor] == this.level),]
+       pdf(paste("VC_Plots/VC.Factor",substr(colnames(data.for.vc.scatterplot)[this.factor],start = 7,stop = 9),"Level.",this.level,".plot.trait.genetic.breeding.value.three.selection.types.pdf", sep = ""), width = 50)
+      #For loop through the different kind of selection/subpopulation levels; index on this.selection.type 
+      for(this.selection.type in unique(data.for.vc.scatterplot.this.factor.level$subpopulation.vector)[-1]){
+        #- there will be a different page for each selection/subpopulation level ####
+
         #Source in the code below that will help make these plots
-        input.scatter.plot.data <- data.for.vc.scatterplot.this.factor.level.and.sel.level 
-        y.axis.label <- this.selection.type
-        this.min.y.axis <- 0
-        this.max.y.axis <- max(input.scatter.plot.data[,which(grepl("variance",
-                                                                    colnames(input.scatter.plot.data)))])
-        #Source in some gplot code that will make the plots, and save them as objects
-        source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_VC_Scatter_Plots_20240715.R")
+        input.scatter.plot.data <- data.for.vc.scatterplot.this.factor.level[which((data.for.vc.scatterplot.this.factor.level$subpopulation.vector == "Founder")|
+                                                                                     (data.for.vc.scatterplot.this.factor.level$subpopulation.vector == this.selection.type) ),] 
+        y.axis.label <- paste("log(Variance)",sep = "")
+        this.min.y.axis <- log(min(data.for.vc.scatterplot.this.factor.level[,which(grepl("variance",
+                                                                        colnames(input.scatter.plot.data)))]))
+        this.max.y.axis <- log(max(data.for.vc.scatterplot.this.factor.level[,which(grepl("variance",
+                                                                    colnames(input.scatter.plot.data)))]))
+        #Source in some gplot code that will the first row plots; this time for the four trait values
+        source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_VC_Scatter_Plots_Traits_20240715.R")
         fa.row.1 <- fa
         fb.row.1 <- fb
         fc.row.1 <- fc
         fd.row.1 <- fd
+   
+        #Source in some gplot code that will the first row plots; this time for the four genetic values
+        source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_VC_Scatter_Plots_Genetic_Values_20240716.R")
+        fa.row.2 <- fa
+        fb.row.2 <- fb
+        fc.row.2 <- fc
+        fd.row.2 <- fd
 
-        # Plot variance component against generation; each plot will contain VCs for trait, genetic value, and 
-         # breeding value
-      #For loop through the different levels of Factor i (columns)
-    #End for loop through the main effects of Factors A-D
-  #End for loop through the pairs of phenotypic variance; genetic variance; breeding value variance
-#End the plot
+        #Source in some gplot code that will the first row plots; this time for the four breeding values
+        source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project/Functions_to_Make_Life_Easier/Make_VC_Scatter_Plots_Breeding_Values_20240716.R")
+        fa.row.3 <- fa
+        fb.row.3 <- fb
+        fc.row.3 <- fc
+        fd.row.3 <- fd
+        
+        #Use the code below as a starting poing for making the figures
+
+        print(plot_grid(fa.row.1, fb.row.1, fc.row.1, fd.row.1,
+                        fa.row.2, fb.row.2, fc.row.2, fd.row.2,
+                        fa.row.3, fb.row.3, fc.row.3, fd.row.3,          
+                        nrow = 3, ncol = 4))
+        
+        
+      
+      }#End for(this.selection.type in unique(data.for.vc.scatterplot.this.factor.level$subpopulation.vector)[-1]) 
+      dev.off()
+    }#End for(this.level in unique(data.for.vc.scatterplot[,this.factor]))for loop through each level of the ith factor
+}#End  for(this.factor in grepl("factor",colnames(data.for.vc.scatterplot))) for loop through the factors
+
 
 
 
