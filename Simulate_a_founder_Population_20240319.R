@@ -6,7 +6,7 @@
 
   #Source in all files
   source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omnigenic_Genetic_Architecture_as_a_Function_20240219.R")
-  source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection.R")
+  source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection_20240515.R")
   source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
   ################################################################################
   ################################################################################

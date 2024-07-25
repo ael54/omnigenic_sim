@@ -139,13 +139,13 @@ cross.stuff.for.a.whole.bunch.of.generations <- function(current.generation = NU
       
       #Add the population variance-covariance matrix of trait.values, genetic.values, and breeding values to the list
       trait.var.covar[[count.local]] <- var.covar.of.trait.values
-      names(trait.var.covar)[count.local] <- paste(type.of.selection, ".Gen.",i,sep = "") 
+      names(trait.var.covar)[count.local] <- paste(type.of.selection, ".nSel.",nSelect,".Gen.",i,sep = "") 
       
       genetic.value.var.covar[[count.local]] <- var.covar.of.genetic.values
-      names(genetic.value.var.covar)[count.local] <-  paste(type.of.selection, ".Gen.",i,sep = "")
+      names(genetic.value.var.covar)[count.local] <-  paste(type.of.selection, ".nSel.",nSelect, ".Gen.",i,sep = "")
       
       breeding.value.var.covar[[count.local]] <- var.covar.of.breeding.values
-      names(breeding.value.var.covar)[count.local] <-  paste(type.of.selection, ".Gen.",i,sep = "")
+      names(breeding.value.var.covar)[count.local] <-  paste(type.of.selection, ".nSel.",nSelect, ".Gen.",i,sep = "")
       
       #Call the next generation the current generation to initiate the next loop
       current.generation = the.next.gen
