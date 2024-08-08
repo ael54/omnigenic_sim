@@ -1,0 +1,12 @@
+Model,Value
+Trait,c("1120", "2")
+group.by ,1
+Trait name ,list.of.subpopulation.traits..eye..
+Kinship,1120:1121
+Z Matrix,c(1121, 1121)
+Covariate,c(1120, 2)
+SNP.P3D,TRUE
+Clustering algorithms,average
+Group kinship,Mean
+group.from ,1
+group.to ,1

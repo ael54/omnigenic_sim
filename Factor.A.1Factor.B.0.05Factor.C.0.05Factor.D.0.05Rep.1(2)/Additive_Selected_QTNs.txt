@@ -1,2 +1,0 @@
-rep	snp	allele	chr	pos	cm	maf
-1	2_754	A/G	2	0.717826501429933	NA	0.1804
