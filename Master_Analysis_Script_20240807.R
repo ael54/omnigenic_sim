@@ -27,7 +27,7 @@ median.peripheral.spearman.correlation.different.types.of.selection.QTN
 #Calculate the spearman correlation coefficients between additive 
 # effect estimates of "Core SNPs" that are within 0.05 cM of core QTNs
 # and "Peripheral SNPs that are not"
-source("QG_Analysis_Code/Run_GWAS_on_SNPs.R")
+source("QG_Analysis_Code/Run_GWAS_on_SNPs_20240807.R")
 
 #Object for spearman correlation coefficients between core and peripheral QTNs
 spearman.correlations.between.core.SNPs

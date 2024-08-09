@@ -246,16 +246,16 @@
   row.names(directional.subpopulation.trait.20.pct) = row.names(directional.subpopulation.20.pct.SNPs)
   
   disruptive.subpopulation.trait.10.pct <- disruptive.selection.population.10.pct$current.generation@pheno
-  row.names(disruptive.subpopulation.trait.10.pct) = row.names(disruptive.subpopulation.SNPs.10.pct.SNPs)
+  row.names(disruptive.subpopulation.trait.10.pct) = row.names(disruptive.subpopulation.10.pct.SNPs)
 
   disruptive.subpopulation.trait.20.pct <- disruptive.selection.population.20.pct$current.generation@pheno
-  row.names(disruptive.subpopulation.trait.20.pct) = row.names(disruptive.subpopulation.SNPs.20.pct.SNPs)  
+  row.names(disruptive.subpopulation.trait.20.pct) = row.names(disruptive.subpopulation.20.pct.SNPs)  
   
   stabilizing.subpopulation.trait.10.pct <- stabilizing.selection.population.10.pct$current.generation@pheno
-  row.names(stabilizing.subpopulation.trait.10.pct) = row.names(stabilizing.subpopulation.QTNs.10.pct)
+  row.names(stabilizing.subpopulation.trait.10.pct) = row.names(stabilizing.subpopulation.10.pct.SNPs)
 
   stabilizing.subpopulation.trait.20.pct <- stabilizing.selection.population.20.pct$current.generation@pheno
-  row.names(stabilizing.subpopulation.trait.20.pct) = row.names(stabilizing.subpopulation.QTNs.20.pct)  
+  row.names(stabilizing.subpopulation.trait.20.pct) = row.names(stabilizing.subpopulation.20.pct.SNPs)  
   
   combined.subpopulation.trait <- rbind(directional.subpopulation.trait.10.pct, directional.subpopulation.trait.20.pct,
                                         disruptive.subpopulation.trait.10.pct,disruptive.subpopulation.trait.20.pct,
