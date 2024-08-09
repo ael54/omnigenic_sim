@@ -1,27 +1,31 @@
 #Run a GWAS using a GLM for each subpopulation
-list.of.subpopulation.traits <- list(directional.subpopulation.trait,
-                                     disruptive.subpopulation.trait,
-                                     stabilizing.subpopulation.trait)
-#list.of.subpopulation.QTN <- list(directional.subpopulation.QTNs,
-#                                  disruptive.subpopulation.QTNs,
-#                                 stabilizing.subpopulation.QTNs)
-list.of.subpopulation.SNPs <- list(directional.subpopulation.SNPs,
-                                   disruptive.subpopulation.SNPs,
-                                   stabilizing.subpopulation.SNPs)
-names.of.subpopulations <- c("Directional.selection", "Disruptive.selection",
-                             "Stabilizing.selection")
+list.of.subpopulation.traits <- list(directional.subpopulation.trait.10.pct, directional.subpopulation.trait.20.pct, 
+                                     disruptive.subpopulation.trait.10.pct, disruptive.subpopulation.trait.20.pct,
+                                     stabilizing.subpopulation.trait.10.pct, stabilizing.subpopulation.trait.20.pct)
+list.of.subpopulation.SNP <- list(directional.subpopulation.10.pct.SNPs,directional.subpopulation.20.pct.SNPs,
+                                  disruptive.subpopulation.10.pct.SNPs,disruptive.subpopulation.20.pct.SNPs,
+                                  stabilizing.subpopulation.10.pct.SNPs, stabilizing.subpopulation.20.pct.SNPs)
+#list.of.subpopulation.SNPs <- list(directional.subpopulation.SNPs,
+#                                   disruptive.subpopulation.SNPs,
+#                                   stabilizing.subpopulation.SNPs)
+names.of.subpopulations <- c("Directional.selection.10.pct","Directional.selection.20.pct",
+                             "Disruptive.selection.10.pct", "Disruptive.selection.20.pct",
+                             "Stabilizing.selection.10.pct","Stabilizing.selection.20.pct")
 
 
-add.effect.estimates.core.SNPs <- list(Directional.selection = NA, 
-                                      Disruptive.selection =NA, 
-                                      Stabilizing.selection = NA)
-add.effect.estimates.peripheral.SNPs <- list(Directional.selection = NA, 
-                                            Disruptive.selection =NA, 
-                                            Stabilizing.selection = NA)
+add.effect.estimates.core.SNPs <- list(Directional.selection.10.pct = NA, Directional.selection.20.pct = NA,
+                                      Disruptive.selection.10.pct = NA, Disruptive.selection.20.pct = NA,
+                                      Stabilizing.selection.10.pct = NA, Stabilizing.selection.20.pct = NA)
+add.effect.estimates.peripheral.SNPs <- list(Directional.selection.10.pct = NA, Directional.selection.20.pct = NA,
+                                            Disruptive.selection.10.pct = NA, Disruptive.selection.20.pct = NA,
+                                            Stabilizing.selection.10.pct = NA, Stabilizing.selection.20.pct = NA)
+
+
+
 for(eye in 1:length(names.of.subpopulations)){
   this.myY <- data.frame(row.names(list.of.subpopulation.traits[[eye]]),
                          list.of.subpopulation.traits[[eye]])
-  this.myGD <- data.frame(row.names(list.of.subpopulation.SNPs[[eye]]),list.of.subpopulation.SNPs[[eye]]) #(genotypes)
+  this.myGD <- data.frame(row.names(list.of.subpopulation.SNP[[eye]]),list.of.subpopulation.SNP[[eye]]) #(genotypes)
   this.myGM <- data.frame(paste("X", the.physical.map.of.SNPs[,1],sep = ""),
                           the.physical.map.of.SNPs[,2],
                           the.physical.map.of.SNPs[,4])#(map locations)
@@ -54,9 +58,9 @@ for(eye in 1:length(names.of.subpopulations)){
   
   #Obtain the row numbers of SNPs that are within 0.05 cM of each QTN
   list.of.row.numbers <- NULL
-  for(jay in 1:nrow(this.simulated.trait$core.genes)){
+  for(jay in 1:nrow(four.genetic.values.omni.core.peri.coreperi$core.genes)){
     # Extract the chromosome and bp position of the start site
-    row.number.of.QTN <- which(the.physical.map.of.QTLs$id == this.simulated.trait$core.genes$core.genes[jay])
+    row.number.of.QTN <- which(the.physical.map.of.QTLs$id == four.genetic.values.omni.core.peri.coreperi$core.genes$core.genes[jay])
     this.chr.start <- as.numeric(the.physical.map.of.QTLs$chr[row.number.of.QTN])
     this.bp.start <- the.physical.map.of.QTLs$pos[row.number.of.QTN] - 0.05
     
@@ -131,6 +135,26 @@ spearman.correlations.between.core.SNPs <- data.frame(the.pop.1,
                                                       the.spearman.rank)
 
 
+#Obtain the median correlation across all pairs
+median.spearman.correlations.between.core.SNPs <- median(the.spearman.rank)
+
+#Obtain median correlation within each types of selection
+same.types.of.selection <- NULL
+for(eye in c(1,3,5)){
+  keep.this.row <- which((spearman.correlations.between.core.SNPs$the.pop.1 == eye)
+                         &(spearman.correlations.between.core.SNPs$the.pop.2 == eye+1))
+  same.types.of.selection <- c(same.types.of.selection, keep.this.row)
+}#end for(eye in 1:3)
+
+median.core.spearman.correlation.within.types.of.selection.SNPs  <- 
+  median(spearman.correlations.between.core.SNPs$the.spearman.rank[same.types.of.selection])
+
+#Obtain median correlation between all subpopulations that are different types of selection
+median.core.spearman.correlation.different.types.of.selection.SNPs <- 
+  median(spearman.correlations.between.core.SNPs$the.spearman.rank[-same.types.of.selection])
+
+
+
 
 #Calculate the Spearman Rank Correlations of Peripheral SNPs.
 the.pop.1 <- NULL
@@ -161,5 +185,24 @@ for(eye in 1:(length(names.of.subpopulations)-1)){
 spearman.correlations.between.peripheral.SNPs <- data.frame(the.pop.1,
                                                             the.pop.2,
                                                             the.spearman.rank)
+
+#Obtain the median correlation across all pairs
+median.spearman.correlations.between.peripheral.SNPs <- median(the.spearman.rank)
+
+#Obtain median correlation within each types of selection
+same.types.of.selection <- NULL
+for(eye in c(1,3,5)){
+  keep.this.row <- which((spearman.correlations.between.peripheral.SNPs$the.pop.1 == eye)
+                         &(spearman.correlations.between.peripheral.SNPs$the.pop.2 == eye+1))
+  same.types.of.selection <- c(same.types.of.selection, keep.this.row)
+}#end for(eye in 1:3)
+
+median.peripheral.spearman.correlation.within.types.of.selection.SNPs  <- 
+  median(spearman.correlations.between.peripheral.SNPs$the.spearman.rank[same.types.of.selection])
+
+#Obtain median correlation between all subpopulations that are different types of selection
+median.peripheral.spearman.correlation.different.types.of.selection.SNPs <- 
+  median(spearman.correlations.between.peripheral.SNPs$the.spearman.rank[-same.types.of.selection])
+
 
 

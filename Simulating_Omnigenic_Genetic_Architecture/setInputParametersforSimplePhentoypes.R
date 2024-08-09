@@ -19,7 +19,7 @@
                                 "Factor.B.", factor.B,
                                 "Factor.C.", factor.C,
                                 "Factor.D.", factor.D,
-                                "Rep.", rep,
+                                "Rep.", this.rep,
                                 sep = "")
 
 

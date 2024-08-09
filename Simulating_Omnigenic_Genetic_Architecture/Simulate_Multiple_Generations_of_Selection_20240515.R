@@ -28,20 +28,20 @@ cross.stuff.for.a.whole.bunch.of.generations <- function(current.generation = NU
       #Breeding decision for ith breeding program...select individuals
       if(type.of.selection == "Direct"){
         selected.inds.current.generation = selectInd(current.generation, 
-                                        this.nSelect, simParam=SP.within.function)
+                                        nSelect, simParam=SP.within.function)
       }
       if(type.of.selection == "Disruptive"){
         #This code is from https://cran.r-project.org/web/packages/AlphaSimR/AlphaSimR.pdf
         squaredDeviation = function(x, optima = 0) (x - optima)^2
         selected.inds.current.generation = selectInd(current.generation, 
-                  this.nSelect, simParam=SP.within.function, 
+                  nSelect, simParam=SP.within.function, 
                   trait = squaredDeviation, selectTop = TRUE)
       }
       if(type.of.selection == "Stabilizing"){
         #This code is from https://cran.r-project.org/web/packages/AlphaSimR/AlphaSimR.pdf
         squaredDeviation = function(x, optima = 0) (x - optima)^2
         selected.inds.current.generation = selectInd(current.generation, 
-                           this.nSelect, simParam=SP.within.function, 
+                           nSelect, simParam=SP.within.function, 
                            trait = squaredDeviation, selectTop = FALSE) 
       }
       #Make crosses for the next generation

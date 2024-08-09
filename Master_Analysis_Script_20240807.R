@@ -11,12 +11,18 @@
 
 #Calculate the spearman correlation coefficients between additive 
 # effect estimates core and peripheral QTNs
-source("QG_Analysis_Code/Run_GWAS_on_QTNs.R")
+source("QG_Analysis_Code/Run_GWAS_on_QTNs_20240807.R")
 
 #Object for spearman correlation coefficients between core and peripheral QTNs
 spearman.correlations.between.core.QTNs
-spearman.correlations.between.peripheral.QTNs
+median.spearman.correlations.between.core.QTN
+median.core.spearman.correlation.within.types.of.selection.QTN
+median.core.spearman.correlation.different.types.of.selection.QTN
 
+spearman.correlations.between.peripheral.QTNs
+median.spearman.correlations.between.peripheral.QTN
+median.peripheral.spearman.correlation.within.types.of.selection.QTN
+median.peripheral.spearman.correlation.different.types.of.selection.QTN
 
 #Calculate the spearman correlation coefficients between additive 
 # effect estimates of "Core SNPs" that are within 0.05 cM of core QTNs
@@ -25,8 +31,14 @@ source("QG_Analysis_Code/Run_GWAS_on_SNPs.R")
 
 #Object for spearman correlation coefficients between core and peripheral QTNs
 spearman.correlations.between.core.SNPs
-spearman.correlations.between.peripheral.SNPs
+median.spearman.correlations.between.core.SNPs
+median.core.spearman.correlation.within.types.of.selection.SNPs
+median.core.spearman.correlation.different.types.of.selection.SNPs
 
+spearman.correlations.between.peripheral.SNPs
+median.spearman.correlations.between.peripheral.SNPs
+median.peripheral.spearman.correlation.within.types.of.selection.SNPs
+median.peripheral.spearman.correlation.different.types.of.selection.SNPs
  
 ################################################################################
 ################################################################################
