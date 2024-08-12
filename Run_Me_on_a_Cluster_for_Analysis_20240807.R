@@ -28,10 +28,24 @@ count <- 1
 
 #Initialize objects that will store GWAS results
 these.spearman.rank.correlation.between.GWAS.core.QTNs <- list()
+these.median.spearman.correlations.between.core.QTN
+these.median.core.spearman.correlation.within.types.of.selection.QTN
+these.median.core.spearman.correlation.different.types.of.selection.QTN
+
 these.spearman.rank.correlation.between.GWAS.peripheral.QTNs <- list()
+these.median.spearman.correlations.between.peripheral.QTN <- list()
+these.median.peripheral.spearman.correlation.within.types.of.selection.QTN <- list()
+these.median.peripheral.spearman.correlation.different.types.of.selection.QTN <- list()
 
 these.spearman.rank.correlation.between.GWAS.core.SNPs <- list()
+these.median.spearman.correlations.between.core.SNPs <- list()
+these.median.core.spearman.correlation.within.types.of.selection.SNPs <- list()
+these.median.core.spearman.correlation.different.types.of.selection.SNPs <- list()
+
 these.spearman.rank.correlation.between.GWAS.peripheral.SNPs <- list()
+these.median.spearman.correlations.between.peripheral.SNPs <- list()
+these.median.peripheral.spearman.correlation.within.types.of.selection.SNPs <- list()
+these.median.peripheral.spearman.correlation.different.types.of.selection.SNPs <- list()
 
 #Initiallize objects that will store GS results
 these.prediction.accuracies.QTNs <- list()
