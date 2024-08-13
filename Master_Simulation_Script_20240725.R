@@ -63,7 +63,7 @@
   directional.selection.population.20.pct <- cross.stuff.for.a.whole.bunch.of.generations(
     current.generation = TrainPop,
     type.of.selection = "Direct",
-    nSelect = this.nSelect,
+    nSelect = 2*this.nSelect,
     nCross = this.nCross,
     nGenerations = this.nGenerations,
     nQtl = this.nQtl,
@@ -105,7 +105,7 @@
   disruptive.selection.population.20.pct <- cross.stuff.for.a.whole.bunch.of.generations(
     current.generation = TrainPop,
     type.of.selection = "Disruptive",
-    nSelect = this.nSelect,
+    nSelect = 2*this.nSelect,
     nCross = this.nCross,
     nGenerations = this.nGenerations,
     nQtl = this.nQtl,
@@ -148,7 +148,7 @@
   stabilizing.selection.population.20.pct <- cross.stuff.for.a.whole.bunch.of.generations(
     current.generation = TrainPop,
     type.of.selection = "Stabilizing",
-    nSelect = this.nSelect,
+    nSelect = 2*this.nSelect,
     nCross = this.nCross,
     nGenerations = this.nGenerations,
     nQtl = this.nQtl,
@@ -190,21 +190,21 @@
   directional.subpopulation.20.pct.SNPs <- pullSnpGeno(directional.selection.population.20.pct$current.generation, 
                                                        simParam = SP)
    
-  disruptive.subpopulation.SNPs.10.pct.SNPs <- pullSnpGeno(disruptive.selection.population.10.pct$current.generation, 
+  disruptive.subpopulation.10.pct.SNPs <- pullSnpGeno(disruptive.selection.population.10.pct$current.generation, 
                                            simParam = SP)
  
-  disruptive.subpopulation.SNPs.20.pct.SNPs <- pullSnpGeno(disruptive.selection.population.10.pct$current.generation, 
+  disruptive.subpopulation.20.pct.SNPs <- pullSnpGeno(disruptive.selection.population.20.pct$current.generation, 
                                                simParam = SP)
   
-  stabilizing.subpopulation.SNPs.10.pct.SNPs <- pullSnpGeno(stabilizing.selection.population.10.pct$current.generation, 
+  stabilizing.subpopulation.10.pct.SNPs <- pullSnpGeno(stabilizing.selection.population.10.pct$current.generation, 
                                                simParam = SP)
   
-  stabilizing.subpopulation.SNPs.20.pct.SNPs <- pullSnpGeno(stabilizing.selection.population.20.pct$current.generation, 
+  stabilizing.subpopulation.20.pct.SNPs <- pullSnpGeno(stabilizing.selection.population.20.pct$current.generation, 
                                                 simParam = SP)
   
   combined.subpopulation.SNPs <- rbind(directional.subpopulation.10.pct.SNPs,directional.subpopulation.20.pct.SNPs,
-                                       disruptive.subpopulation.SNPs.10.pct.SNPs,disruptive.subpopulation.SNPs.20.pct.SNPs,
-                                       stabilizing.subpopulation.SNPs.10.pct.SNPs, stabilizing.subpopulation.SNPs.20.pct.SNPs)
+                                       disruptive.subpopulation.10.pct.SNPs,disruptive.subpopulation.20.pct.SNPs,
+                                       stabilizing.subpopulation.10.pct.SNPs, stabilizing.subpopulation.20.pct.SNPs)
   
   
   #Merge the QTN data together from the three different subpopulations
@@ -240,22 +240,22 @@
   #Merge the trait data together from the three different subpopulations
   #####The code below is not working...fix it
   directional.subpopulation.trait.10.pct <- directional.selection.population.10.pct$current.generation@pheno
-  row.names(directional.subpopulation.trait) = row.names(directional.subpopulation.SNPs)
+  row.names(directional.subpopulation.trait.10.pct) = row.names(directional.subpopulation.10.pct.SNPs)
 
   directional.subpopulation.trait.20.pct <- directional.selection.population.20.pct$current.generation@pheno
-  row.names(directional.subpopulation.trait) = row.names(directional.subpopulation.SNPs)
+  row.names(directional.subpopulation.trait.20.pct) = row.names(directional.subpopulation.20.pct.SNPs)
   
   disruptive.subpopulation.trait.10.pct <- disruptive.selection.population.10.pct$current.generation@pheno
-  row.names(disruptive.subpopulation.trait) = row.names(disruptive.subpopulation.SNPs)
+  row.names(disruptive.subpopulation.trait.10.pct) = row.names(disruptive.subpopulation.10.pct.SNPs)
 
   disruptive.subpopulation.trait.20.pct <- disruptive.selection.population.20.pct$current.generation@pheno
-  row.names(disruptive.subpopulation.trait) = row.names(disruptive.subpopulation.SNPs)  
+  row.names(disruptive.subpopulation.trait.20.pct) = row.names(disruptive.subpopulation.20.pct.SNPs)  
   
   stabilizing.subpopulation.trait.10.pct <- stabilizing.selection.population.10.pct$current.generation@pheno
-  row.names(stabilizing.subpopulation.trait) = row.names(stabilizing.subpopulation.SNPs)
+  row.names(stabilizing.subpopulation.trait.10.pct) = row.names(stabilizing.subpopulation.10.pct.SNPs)
 
   stabilizing.subpopulation.trait.20.pct <- stabilizing.selection.population.20.pct$current.generation@pheno
-  row.names(stabilizing.subpopulation.trait) = row.names(stabilizing.subpopulation.SNPs)  
+  row.names(stabilizing.subpopulation.trait.20.pct) = row.names(stabilizing.subpopulation.20.pct.SNPs)  
   
   combined.subpopulation.trait <- rbind(directional.subpopulation.trait.10.pct, directional.subpopulation.trait.20.pct,
                                         disruptive.subpopulation.trait.10.pct,disruptive.subpopulation.trait.20.pct,
