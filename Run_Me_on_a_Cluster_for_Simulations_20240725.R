@@ -6,7 +6,7 @@
 
 
 #Set your working directory
-setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project")
+setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/omnigenic_sim")
 home.dir <- getwd()
 
 
@@ -17,7 +17,7 @@ library(package = "simplePHENOTYPES")
 #Source in all files
 
 source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omni_Four_Trait_Trick_20240509.R")
-source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection_20240515.R")
+source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection_20240814.R")
 source("Simulating_Omnigenic_Genetic_Architecture/Obtain_Breeding_Values_20240515.R")
 source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
 

@@ -2,7 +2,7 @@
 
 
 #Set your working directory
-setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/Sabbatical_Project")
+setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/omnigenic_sim")
 home.dir <- getwd()
 
 #####Read in all of the packages that are necessary
@@ -28,9 +28,9 @@ count <- 1
 
 #Initialize objects that will store GWAS results
 these.spearman.rank.correlation.between.GWAS.core.QTNs <- list()
-these.median.spearman.correlations.between.core.QTN
-these.median.core.spearman.correlation.within.types.of.selection.QTN
-these.median.core.spearman.correlation.different.types.of.selection.QTN
+these.median.spearman.correlations.between.core.QTN <- list()
+these.median.core.spearman.correlation.within.types.of.selection.QTN <- list()
+these.median.core.spearman.correlation.different.types.of.selection.QTN <- list()
 
 these.spearman.rank.correlation.between.GWAS.peripheral.QTNs <- list()
 these.median.spearman.correlations.between.peripheral.QTN <- list()

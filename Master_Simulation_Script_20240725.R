@@ -238,7 +238,6 @@
                                        stabilizing.subpopulation.QTNs.10.pct, stabilizing.subpopulation.QTNs.20.pct)
   
   #Merge the trait data together from the three different subpopulations
-  #####The code below is not working...fix it
   directional.subpopulation.trait.10.pct <- directional.selection.population.10.pct$current.generation@pheno
   row.names(directional.subpopulation.trait.10.pct) = row.names(directional.subpopulation.10.pct.SNPs)
 
@@ -263,6 +262,37 @@
   
   
   ###Save the R workspace
+  #I am not sure if the code starting on Line 273 will work. Thus,
+  # I want to save the image here. Once I am convinced this is 
+  # correctly, I will comment this out
+  save.image(paste(factor.A,".FactorA..",factor.B, ".FactorB..",
+                   factor.C,".FactorC..",factor.D,".FactorD..",
+                   this.rep, ".Rep.Rdata", sep = ""))
+  
+  
+  #Merge the trait data together from the three different subpopulations
+  directional.subpopulation.trait.10.prev.gen <- directional.selection.population.10.pct$previous.generation@pheno
+  row.names(directional.subpopulation.trait.10.prev.gen) = row.names(directional.subpopulation.10.prev.gen.SNPs)
+  
+  directional.subpopulation.trait.20.prev.gen <- directional.selection.population.20.pct$previous.generation@pheno
+  row.names(directional.subpopulation.trait.20.prev.gen) = row.names(directional.subpopulation.20.prev.gen.SNPs)
+  
+  disruptive.subpopulation.trait.10.prev.gen <- disruptive.selection.population.10.pct$previous.generation@pheno
+  row.names(disruptive.subpopulation.trait.10.prev.gen) = row.names(disruptive.subpopulation.10.prev.gen.SNPs)
+  
+  disruptive.subpopulation.trait.20.prev.gen <- disruptive.selection.population.20.pct$previous.generation@pheno
+  row.names(disruptive.subpopulation.trait.20.prev.gen) = row.names(disruptive.subpopulation.20.prev.gen.SNPs)  
+  
+  stabilizing.subpopulation.trait.10.prev.gen <- stabilizing.selection.population.10.pct$previous.generation@pheno
+  row.names(stabilizing.subpopulation.trait.10.prev.gen) = row.names(stabilizing.subpopulation.10.prev.gen.SNPs)
+  
+  stabilizing.subpopulation.trait.20.prev.gen <- stabilizing.selection.population.20.pct$previous.generation@pheno
+  row.names(stabilizing.subpopulation.trait.20.prev.gen) = row.names(stabilizing.subpopulation.20.prev.gen.SNPs)  
+  
+  combined.subpopulation.trait <- rbind(directional.subpopulation.trait.10.prev.gen, directional.subpopulation.trait.20.prev.gen,
+                                        disruptive.subpopulation.trait.10.prev.gen,disruptive.subpopulation.trait.20.prev.gen,
+                                        stabilizing.subpopulation.trait.10.prev.gen,stabilizing.subpopulation.trait.20.prev.gen)
+  
   save.image(paste(factor.A,".FactorA..",factor.B, ".FactorB..",
                    factor.C,".FactorC..",factor.D,".FactorD..",
                    this.rep, ".Rep.Rdata", sep = ""))
