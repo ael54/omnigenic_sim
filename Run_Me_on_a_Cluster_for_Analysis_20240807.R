@@ -92,21 +92,90 @@ for(i in c(1,2,4)){
              spearman.correlations.between.core.QTNs
            names(these.spearman.rank.correlation.between.GWAS.core.QTNs)[count] <-
                this.setting
-
+           
+           these.median.spearman.correlations.between.core.QTN[[count]] <-
+             median.spearman.correlations.between.core.QTN
+           names(these.spearman.rank.correlation.between.GWAS.core.QTNs)[count] <-
+             this.setting
+           
+           
+           these.median.core.spearman.correlation.within.types.of.selection.QTN[[count]] <-
+             median.core.spearman.correlation.within.types.of.selection.QTN 
+           names(these.median.core.spearman.correlation.within.types.of.selection.QTN)[count] <-
+             this.setting
+           
+           these.median.core.spearman.correlation.different.types.of.selection.QTN[[count]] <-
+             median.core.spearman.correlation.different.types.of.selection.QTN 
+           names(these.median.core.spearman.correlation.different.types.of.selection.QTN)[count] <-
+             this.setting
+           
+           
+           
            these.spearman.rank.correlation.between.GWAS.peripheral.QTNs[[count]] <-
              spearman.correlations.between.peripheral.QTNs
            names(these.spearman.rank.correlation.between.GWAS.peripheral.QTNs)[count] <-
-             this.setting           
+             this.setting 
+           
+           these.median.spearman.correlations.between.peripheral.QTN[[count]] <-
+             median.spearman.correlations.between.peripheral.QTN
+           names(these.median.spearman.correlations.between.peripheral.QTN)[count] <-
+             this.setting
+           
+           these.median.peripheral.spearman.correlation.within.types.of.selection.QTN[[count]] <-
+             median.peripheral.spearman.correlation.within.types.of.selection.QTN
+           names(these.median.peripheral.spearman.correlation.within.types.of.selection.QTN)[count] <-
+             this.setting
+           
+           
+           these.median.peripheral.spearman.correlation.different.types.of.selection.QTN[[count]] <-
+             median.peripheral.spearman.correlation.different.types.of.selection.QTN
+           names(these.median.peripheral.spearman.correlation.different.types.of.selection.QTN)[count] <-
+             this.setting
            
            these.spearman.rank.correlation.between.GWAS.core.SNPs[[count]] <-
              spearman.correlations.between.core.SNPs
            names(these.spearman.rank.correlation.between.GWAS.core.SNPs)[count] <-
              this.setting
            
+           
+           these.median.spearman.correlations.between.core.SNPs[[count]] <-
+             median.spearman.correlations.between.core.SNPs
+           names(these.median.spearman.correlations.between.core.SNPs)[count] <-
+             this.setting
+           
+           
+           these.median.core.spearman.correlation.within.types.of.selection.SNPs[[count]] <-
+             median.core.spearman.correlation.within.types.of.selection.SNPs
+           names(these.median.core.spearman.correlation.within.types.of.selection.SNPs)[count] <-
+             this.setting
+           
+           these.median.core.spearman.correlation.different.types.of.selection.SNPs[[count]] <-
+             median.core.spearman.correlation.different.types.of.selection.SNPs
+           names(these.median.core.spearman.correlation.different.types.of.selection.SNPs)[count] <-
+             this.setting
+           
+           
            these.spearman.rank.correlation.between.GWAS.peripheral.SNPs[[count]] <-
              spearman.correlations.between.peripheral.SNPs
            names(these.spearman.rank.correlation.between.GWAS.peripheral.SNPs)[count] <-
              this.setting  
+           
+           
+           these.median.spearman.correlations.between.peripheral.SNPs[[count]] <-
+             median.spearman.correlations.between.peripheral.SNPs
+           names(these.median.spearman.correlations.between.peripheral.SNPs)[count] <-
+             this.setting
+           
+           these.median.peripheral.spearman.correlation.within.types.of.selection.SNPs[[count]] <-
+             median.peripheral.spearman.correlation.within.types.of.selection.SNPs
+           names(these.median.peripheral.spearman.correlation.within.types.of.selection.SNPs)[count] <-
+             this.setting
+           
+           these.median.peripheral.spearman.correlation.different.types.of.selection.SNPs[[count]] <-
+             median.peripheral.spearman.correlation.different.types.of.selection.SNPs
+           names(these.median.peripheral.spearman.correlation.different.types.of.selection.SNPs)[count] <-
+             this.setting
+           
    
            ##############################################################
            #### Append GS Results
