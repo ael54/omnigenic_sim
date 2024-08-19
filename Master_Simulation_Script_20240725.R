@@ -24,13 +24,13 @@
     
   #Add the population variance-covariance matrix of trait.values, genetic.values, and breeding values to the list
   these.trait.var.covar[[1]] <- var.covar.of.trait.values
-  names(these.trait.var.covar)[1] <- "Founder.pop"
+  names(these.trait.var.covar)[1] <- paste("Founder.pop.Rep.",this.rep, sep = "")
   
   these.genetic.value.var.covar[[1]] <- var.covar.of.genetic.values
-  names(these.genetic.value.var.covar)[1] <- "Founder.pop"
+  names(these.genetic.value.var.covar)[1] <-  paste("Founder.pop.Rep.",this.rep, sep = "")
   
   these.breeding.value.var.covar[[1]] <- var.covar.of.breeding.values
-  names(these.breeding.value.var.covar)[1] <- "Founder.pop"
+  names(these.breeding.value.var.covar)[1] <-  paste("Founder.pop.Rep.",this.rep, sep = "")
   
   ################################################################################
   ################################################################################
