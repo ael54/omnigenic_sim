@@ -272,23 +272,23 @@
   
   #Merge the trait data together from the three different subpopulations
   directional.subpopulation.trait.10.prev.gen <- directional.selection.population.10.pct$previous.generation@pheno
-  row.names(directional.subpopulation.trait.10.prev.gen) = row.names(pullSnpGeno(directional.selection.population.10.pct$current.generation, simParam = SP))
+  row.names(directional.subpopulation.trait.10.prev.gen) = row.names(pullSnpGeno(directional.selection.population.10.pct$previous.generation, simParam = SP))
   
 
   directional.subpopulation.trait.20.prev.gen <- directional.selection.population.20.pct$previous.generation@pheno
-  row.names(directional.subpopulation.trait.20.prev.gen) = row.names(pullSnpGeno(directional.subpopulation.trait.20.pct$current.generation, simParam = SP))
+  row.names(directional.subpopulation.trait.20.prev.gen) = row.names(pullSnpGeno(directional.subpopulation.trait.20.pct$previous.generation, simParam = SP))
   
   disruptive.subpopulation.trait.10.prev.gen <- disruptive.selection.population.10.pct$previous.generation@pheno
-  row.names(disruptive.subpopulation.trait.10.prev.gen) = row.names(pullSnpGeno(disruptive.subpopulation.trait.10.pct$current.generation, simParam = SP))
+  row.names(disruptive.subpopulation.trait.10.prev.gen) = row.names(pullSnpGeno(disruptive.subpopulation.trait.10.pct$previous.generation, simParam = SP))
   
   disruptive.subpopulation.trait.20.prev.gen <- disruptive.selection.population.20.pct$previous.generation@pheno
-  row.names(disruptive.subpopulation.trait.20.prev.gen) = row.names(pullSnpGeno(disruptive.subpopulation.trait.20.pct$current.generation, simParam = SP))  
+  row.names(disruptive.subpopulation.trait.20.prev.gen) = row.names(pullSnpGeno(disruptive.subpopulation.trait.20.pct$previous.generation, simParam = SP))  
   
   stabilizing.subpopulation.trait.10.prev.gen <- stabilizing.selection.population.10.pct$previous.generation@pheno
-  row.names(stabilizing.subpopulation.trait.10.prev.gen) = row.names(pullSnpGeno(stabilizing.subpopulation.trait.10.pct$current.generation, simParam = SP))
+  row.names(stabilizing.subpopulation.trait.10.prev.gen) = row.names(pullSnpGeno(stabilizing.subpopulation.trait.10.pct$previous.generation, simParam = SP))
   
   stabilizing.subpopulation.trait.20.prev.gen <- stabilizing.selection.population.20.pct$previous.generation@pheno
-  row.names(stabilizing.subpopulation.trait.20.prev.gen) = row.names(pullSnpGeno(stabilizing.subpopulation.trait.20.pct$current.generation, simParam = SP))  
+  row.names(stabilizing.subpopulation.trait.20.prev.gen) = row.names(pullSnpGeno(stabilizing.subpopulation.trait.20.pct$previous.generation, simParam = SP))  
   
   combined.subpopulation.trait <- rbind(directional.subpopulation.trait.10.prev.gen, directional.subpopulation.trait.20.prev.gen,
                                         disruptive.subpopulation.trait.10.prev.gen,disruptive.subpopulation.trait.20.prev.gen,

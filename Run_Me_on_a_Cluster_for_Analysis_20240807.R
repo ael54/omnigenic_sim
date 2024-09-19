@@ -59,7 +59,7 @@ these.prediction.accuracies.SNPs <- list()
 
 #Alex added this new line below to point to the directory where Joao's run of
 # one iteration of the loop was kept
-setwd("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/results-test-run-20240807/")
+setwd("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/Partial-Results-Simulations-20240918/")
 
 for(i in c(1,2,4)){
   for(j in c(0.05,0.5,1,2)){
