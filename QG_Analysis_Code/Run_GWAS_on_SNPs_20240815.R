@@ -162,10 +162,10 @@ keep.this.row <- which(substr(spearman.correlations.between.core.SNPs$the.pop.1,
 do.not.keep.this.row <-  unique(c(grep("prev.gen", spearman.correlations.between.core.SNPs$the.pop.1),                       
                                   grep("prev.gen", spearman.correlations.between.core.SNPs$the.pop.2)))
 keep.this.row.updated <- keep.this.row[-which(keep.this.row %in% do.not.keep.this.row)]
-same.types.of.selection <- c(same.types.of.selection, keep.this.row)
+#same.types.of.selection <- c(same.types.of.selection, keep.this.row)
 
 median.core.spearman.correlation.within.types.of.selection.SNPs  <- 
-  median(spearman.correlations.between.core.SNPs$the.spearman.rank[same.types.of.selection])
+  median(spearman.correlations.between.core.SNPs$the.spearman.rank[keep.this.row.updated])
 
 #Plot median correlation with previous generation. I am rewriting some code so you can follow
 # what I am doing
@@ -243,10 +243,10 @@ keep.this.row <- which(substr(spearman.correlations.between.peripheral.SNPs$the.
 do.not.keep.this.row <-  unique(c(grep("prev.gen", spearman.correlations.between.peripheral.SNPs$the.pop.1),                       
                                   grep("prev.gen", spearman.correlations.between.peripheral.SNPs$the.pop.2)))
 keep.this.row.updated <- keep.this.row[-which(keep.this.row %in% do.not.keep.this.row)]
-same.types.of.selection <- c(same.types.of.selection, keep.this.row)
+#same.types.of.selection <- c(same.types.of.selection, keep.this.row)
 
 median.peripheral.spearman.correlation.within.types.of.selection.SNPs  <- 
-  median(spearman.correlations.between.peripheral.SNPs$the.spearman.rank[same.types.of.selection])
+  median(spearman.correlations.between.peripheral.SNPs$the.spearman.rank[keep.this.row.updated])
 
 #Plot median correlation with previous generation. I am rewriting some code so you can follow
 # what I am doing
