@@ -17,7 +17,7 @@ library(package = "simplePHENOTYPES")
 #Source in all files
 
 source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omni_Four_Trait_Trick_20240509.R")
-source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection_20240814.R")
+source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection_20241216.R")
 source("Simulating_Omnigenic_Genetic_Architecture/Obtain_Breeding_Values_20240515.R")
 source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
 
@@ -47,7 +47,7 @@ for(rep in 1:3){
                                                 "Factor.D.", el,
                                                 "Rep.", this.rep,
                                                 sep = "")
-           source("Master_Simulation_Script_20240924_AEL.R")
+           source("Master_Simulation_Script_20241216.R")
          }#End for(rep in 1:3)
       }#End for(el in 1:4)
     }#End for(k in 1:4)
