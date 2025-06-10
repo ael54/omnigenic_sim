@@ -6,7 +6,7 @@
 
 
 #Set your working directory
-setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/omnigenic_sim")
+setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/omnigenic_sim/")
 home.dir <- getwd()
 
 
@@ -19,7 +19,9 @@ library(package = "simplePHENOTYPES")
 source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omni_Four_Trait_Trick_20240509.R")
 source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection_20241216.R")
 source("Simulating_Omnigenic_Genetic_Architecture/Obtain_Breeding_Values_20240515.R")
+source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omnigenic_Genetic_Architecture_as_a_Function_20240219.R")
 source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
+source("Simulate_a_founder_Population_as_a_Function_20250610.R")
 
 #Simulate a founder population in AlphaSimR. This will take a long-ish time to run
 # e.g. - it should take about 30 minutes on my MacBook Pro
@@ -30,7 +32,17 @@ source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
 ### Not to mention output directories of simulated traits
 
 for(rep in 1:3){
-  source("Simulate_a_founder_Population_20240319.R")
+  simulated.founder.pop.genos <- simulate.a.founder.population(this.nChr = 2,
+                                                               this.nQtl = 50,
+                                                               this.nSnp = 400)
+  this.QTL.Map <- simulated.founder.pop.geno$this.QTL.Map
+  these.QTL.Genotypes <- simulated.founder.pop.geno$these.QTL.Genotypes
+  the.physical.map.of.QTLs <- simulated.founder.pop.geno$the.physical.map.of.QTLs
+  hapmap.file.of.founder.QTLs <- simulated.founder.pop.geno$hapmap.file.of.founder.QTLs
+  the.founder.SNPs <- simulated.founder.pop.geno$the.founder.SNPs
+  the.physical.map.of.SNPs <- simulated.founder.pop.geno$the.physical.map.of.SNPs
+  hapmap.file.of.founder.SNPs <- simulated.founder.pop.geno$hapmap.file.of.founder.SNPs
+  
   for(i in c(1,2,4)){
     for(j in c(0.05,0.5,1,2)){
        for(k in c(0.05,0.5,1,2)){

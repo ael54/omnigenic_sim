@@ -6,16 +6,16 @@
 
   #Source in all files
   source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omnigenic_Genetic_Architecture_as_a_Function_20240219.R")
-  source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection_20240814.R")
+  source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection_20241216.R")
   source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
   ################################################################################
   ################################################################################
   #Simulate a founder population
   print("-------------------All simulation settings for founder popuations are found on lines 16-55 of Simulate_a_founder_Population_20240319--------------------")
   
-  this.nChr <- 5
+  this.nChr <- 2
   this.nQtl <- 50  # This is actually the number of QTLs per chromosome
-  this.nSnp <- 1000 # This is the total number of SNPs across the genome
+  this.nSnp <- 400 # This is the total number of SNPs across the genome
   this.Ne <- 30
   this.nParents <- 50
   #this.nInd <- 300 #This is obsolete because we are using this.nParents instead
