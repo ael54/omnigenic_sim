@@ -15,7 +15,7 @@
   this.seed.number.peri.peri.epi <- sample(-1000000:1000000, 1)
   this.seed.number.core.peri.epi <- sample(-1000000:1000000, 1)
   this.snps.are.in.columns <- FALSE
-  this.output.dir.name <- paste("Factor.A.", factor.A,
+  this.output.directory.name <- paste("Factor.A.", factor.A,
                                 "Factor.B.", factor.B,
                                 "Factor.C.", factor.C,
                                 "Factor.D.", factor.D,

@@ -1,3 +1,6 @@
-
+*.Rdata
+Factor.*
+VC_Plots
+GWAS_Plots
 .RData
 .RDataTmp

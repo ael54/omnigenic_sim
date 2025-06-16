@@ -1,8 +1,5 @@
 
-plot.trait.1 <- FALSE
-plot.trait.2 <- TRUE
-plot.trait.3 <- TRUE
-plot.trait.4 <- TRUE
+
 
 #Set your working directory
 setwd("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/omnigenic_sim")
@@ -18,35 +15,343 @@ library(ggplot2)
 library(cowplot)
 
 
+#######################################################
+### Results for the core QTL
+#######################################################
+these.spearman.rank.correlation.between.GWAS.core.QTNs <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/Master-Result-Lists-2024-06-13/master.these.spearman.rank.correlation.between.GWAS.core.QTNs.RDS")
+
+#Extract all of the results and put them into an object
+spearman.rank.vector <- NULL
+factor.A.vector <- NULL
+factor.B.vector <- NULL
+factor.C.vector <- NULL
+factor.D.vector <- NULL
+rep.vector <- NULL
+pop.A.vector <- NULL
+pop.B.vector <- NULL
+for(i in c(1,2,4)){
+  for(j in c(0.05,0.5,1,2)){
+    for(k in c(0.05,0.5,1,2)){
+      for(el in c(0.05,0.5,1,2)){
+        for(rep in 1:3){
+          #Get the object from the list you want
+          factor.A <- i
+          factor.B <- j
+          factor.C <- k
+          factor.D <- el 
+          this.rep <- rep
+          
+          #Read in the R data file for a given setting
+          this.setting <-  paste(factor.A,".FactorA..",factor.B, ".FactorB..",
+                                 factor.C,".FactorC..",factor.D,".FactorD..",
+                                 this.rep, ".Rep", sep = "")
+          
+          #Extract the results we want
+          results.this.setting <- these.spearman.rank.correlation.between.GWAS.core.QTNs[which(names(these.spearman.rank.correlation.between.GWAS.core.QTNs)
+                                                                                               == this.setting)]
+          
+          
+          #Put the results into a format that we can extract the numbers from                                                                                                                                                                        == this.setting)]
+          results.this.setting.for.figure <- matrix(unlist(results.this.setting), nrow = 3)
+          #Loop through the pairs of populations, and extract the information we need
+          for(this.row in 1:nrow(results.this.setting.for.figure)){
+            spearman.rank.vector <- c(spearman.rank.vector, results.this.setting.for.figure[this.row,3])
+            factor.A.vector <- c(factor.A.vector, factor.A)
+            factor.B.vector <- c(factor.B.vector, factor.B)
+            factor.C.vector <- c(factor.C.vector, factor.C)
+            factor.D.vector <- c(factor.D.vector, factor.D)
+            rep.vector <- c(rep.vector, this.rep)
+            pop.A.vector <-c(pop.A.vector, results.this.setting.for.figure[this.row,1])
+            pop.B.vector <- c(pop.B.vector, results.this.setting.for.figure[this.row,2])
+          }#End for(this.row in 1:nrow(results.this.setting.for.figure))
+        }#End for(rep in 1:3)
+      }#End for(el in 1:4)
+    }#End for(k in 1:4)
+  }#End for(j in 1:4)
+}#End for(i in 1:3)
+
+#Obtain the data for your boxplot
+data.for.boxplot <- data.frame(spearman.rank.vector, factor.A.vector,
+                               factor.B.vector, factor.C.vector,
+                               factor.D.vector, rep.vector,
+                               pop.A.vector, pop.B.vector)
+
+#Make a plot summarizing the GWAS results of core QTL
+#Ultimately, the information that I need for the box plots are
+# Value: in column 1 and Factor Level in column 2
+
+#Initiate the plot
+pdf("GWAS.Results.Core.QTL.written.while.writing.plot.code.pdf", width = 8)
+par(mfrow = c(3,4))
+ #Two for loops through the pairs of three subpopulations
+  for(this.pop.a in 1:2){
+    for(this.pop.b in (this.pop.a+1):3){
+        #Extract the rows for only the populations you want to compare
+        data.for.boxplot.these.two.pops <- data.for.boxplot[which((data.for.boxplot$pop.A.vector == this.pop.a)
+                                                                  &(data.for.boxplot$pop.B.vector == this.pop.b) ),]
+        #Remove "NAs" from the results
+        data.for.boxplot.these.two.pops <- na.omit(data.for.boxplot.these.two.pops)
+        
+      
+        
+        #Make a box plot for Factor A   
+        means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                    data.for.boxplot.these.two.pops$factor.A.vector, mean)
+        
+        boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+                data.for.boxplot.these.two.pops$factor.A.vector, col = "Red", ylim = c(-1,1),
+                xlab = "Cor Add vs Per Add", ylab = paste("Spearman rank between populations ",
+                                                         this.pop.a, " and ", this.pop.b, sep = ""))
+        points(c(1:length(means)), means, pch = 3, cex = 0.75)
+  
+        
+        #Make a box plot for Factor B
+        means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                    data.for.boxplot.these.two.pops$factor.B.vector, mean)
+        
+        boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+                  data.for.boxplot.these.two.pops$factor.B.vector, col = "Red", ylim = c(-1,1), 
+                xlab = "Cor Epi vs Cor Add", ylab = paste("Spearman rank between populations ",
+                                                         this.pop.a, " and ", this.pop.b, sep = ""))
+        points(c(1:length(means)), means, pch = 3, cex = 0.75)
+  
+        
+        #Make a box plot for Factor C
+        means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                    data.for.boxplot.these.two.pops$factor.C.vector, mean)
+        
+        boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+                  data.for.boxplot.these.two.pops$factor.C.vector, col = "Red", ylim = c(-1,1), 
+                xlab = "Per Epi vs Per Add", ylab = paste("Spearman rank between populations ",
+                                                         this.pop.a, " and ", this.pop.b, sep = ""))
+        points(c(1:length(means)), means, pch = 3, cex = 0.75)
+        
+        
+        #Make a box plot for Factor D
+        means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                    data.for.boxplot.these.two.pops$factor.D.vector, mean)
+        
+        boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+                  data.for.boxplot.these.two.pops$factor.D.vector, col = "Red", ylim = c(-1,1), 
+                xlab = "Btw Epi vs Per Add", ylab = paste("Spearman rank between populations ",
+                                                         this.pop.a, " and ", this.pop.b, sep = ""))
+        points(c(1:length(means)), means, pch = 3, cex = 0.75)
+        
+
+          #For loop through the different levels of Factor i
+              ####
+              #Box plot of Spearman rank correlation coefficients of core QTL (Y-axis)
+              ### Against factor levels (X-axis)
+          #End for loop through the different levels of Factor i
+      
+        # End for loop through the main effect pairs of populations 
+    }#End for(this.pop.b in (this.pop.a+1):3)
+  }#End for(this.pop.a in 1:2) 
+#End the plot
+dev.off()
+
+#################### Same plots, using SNPs instead of QTLs
+these.spearman.rank.correlation.between.GWAS.core.SNPs <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/Master-Result-Lists-2024-06-13/master.these.spearman.rank.correlation.between.GWAS.core.SNPs.RDS")
+
+#Extract all of the results and put them into an object
+spearman.rank.vector <- NULL
+factor.A.vector <- NULL
+factor.B.vector <- NULL
+factor.C.vector <- NULL
+factor.D.vector <- NULL
+rep.vector <- NULL
+pop.A.vector <- NULL
+pop.B.vector <- NULL
+for(i in c(1,2,4)){
+  for(j in c(0.05,0.5,1,2)){
+    for(k in c(0.05,0.5,1,2)){
+      for(el in c(0.05,0.5,1,2)){
+        for(rep in 1:3){
+          #Get the object from the list you want
+          factor.A <- i
+          factor.B <- j
+          factor.C <- k
+          factor.D <- el 
+          this.rep <- rep
+          
+          #Read in the R data file for a given setting
+          this.setting <-  paste(factor.A,".FactorA..",factor.B, ".FactorB..",
+                                 factor.C,".FactorC..",factor.D,".FactorD..",
+                                 this.rep, ".Rep", sep = "")
+          
+          #Extract the results we want
+          results.this.setting <- these.spearman.rank.correlation.between.GWAS.core.SNPs[which(names(these.spearman.rank.correlation.between.GWAS.core.QTNs)
+                                                                                               == this.setting)]
+          
+          
+          #Put the results into a format that we can extract the numbers from                                                                                                                                                                        == this.setting)]
+          results.this.setting.for.figure <- matrix(unlist(results.this.setting), nrow = 3)
+          #Loop through the pairs of populations, and extract the information we need
+          for(this.row in 1:nrow(results.this.setting.for.figure)){
+            spearman.rank.vector <- c(spearman.rank.vector, results.this.setting.for.figure[this.row,3])
+            factor.A.vector <- c(factor.A.vector, factor.A)
+            factor.B.vector <- c(factor.B.vector, factor.B)
+            factor.C.vector <- c(factor.C.vector, factor.C)
+            factor.D.vector <- c(factor.D.vector, factor.D)
+            rep.vector <- c(rep.vector, this.rep)
+            pop.A.vector <-c(pop.A.vector, results.this.setting.for.figure[this.row,1])
+            pop.B.vector <- c(pop.B.vector, results.this.setting.for.figure[this.row,2])
+          }#End for(this.row in 1:nrow(results.this.setting.for.figure))
+        }#End for(rep in 1:3)
+      }#End for(el in 1:4)
+    }#End for(k in 1:4)
+  }#End for(j in 1:4)
+}#End for(i in 1:3)
+
+#Obtain the data for your boxplot
+data.for.boxplot <- data.frame(spearman.rank.vector, factor.A.vector,
+                               factor.B.vector, factor.C.vector,
+                               factor.D.vector, rep.vector,
+                               pop.A.vector, pop.B.vector)
+
+#Make a plot summarizing the GWAS results of core QTL
+#Ultimately, the information that I need for the box plots are
+# Value: in column 1 and Factor Level in column 2
+
+#Initiate the plot
+pdf("GWAS.Results.Core.SNPs.written.while.writing.plot.code.pdf", width = 8)
+par(mfrow = c(3,4))
+#Two for loops through the pairs of three subpopulations
+for(this.pop.a in 1:2){
+  for(this.pop.b in (this.pop.a+1):3){
+    #Extract the rows for only the populations you want to compare
+    data.for.boxplot.these.two.pops <- data.for.boxplot[which((data.for.boxplot$pop.A.vector == this.pop.a)
+                                                              &(data.for.boxplot$pop.B.vector == this.pop.b) ),]
+    #Remove "NAs" from the results
+    data.for.boxplot.these.two.pops <- na.omit(data.for.boxplot.these.two.pops)
+    
+    
+    
+    #Make a box plot for Factor A   
+    means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                data.for.boxplot.these.two.pops$factor.A.vector, mean)
+    
+    boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+              data.for.boxplot.these.two.pops$factor.A.vector, col = "Red", ylim = c(-1,1),
+            xlab = "Cor Add vs Per Add", ylab = paste("Spearman rank between populations ",
+                                                      this.pop.a, " and ", this.pop.b, sep = ""))
+    points(c(1:length(means)), means, pch = 3, cex = 0.75)
+    
+    
+    #Make a box plot for Factor B
+    means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                data.for.boxplot.these.two.pops$factor.B.vector, mean)
+    
+    boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+              data.for.boxplot.these.two.pops$factor.B.vector, col = "Red", ylim = c(-1,1), 
+            xlab = "Cor Epi vs Cor Add", ylab = paste("Spearman rank between populations ",
+                                                      this.pop.a, " and ", this.pop.b, sep = ""))
+    points(c(1:length(means)), means, pch = 3, cex = 0.75)
+    
+    
+    #Make a box plot for Factor C
+    means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                data.for.boxplot.these.two.pops$factor.C.vector, mean)
+    
+    boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+              data.for.boxplot.these.two.pops$factor.C.vector, col = "Red", ylim = c(-1,1), 
+            xlab = "Per Epi vs Per Add", ylab = paste("Spearman rank between populations ",
+                                                      this.pop.a, " and ", this.pop.b, sep = ""))
+    points(c(1:length(means)), means, pch = 3, cex = 0.75)
+    
+    
+    #Make a box plot for Factor D
+    means <- by(data.for.boxplot.these.two.pops$spearman.rank.vector, 
+                data.for.boxplot.these.two.pops$factor.D.vector, mean)
+    
+    boxplot(data.for.boxplot.these.two.pops$spearman.rank.vector ~ 
+              data.for.boxplot.these.two.pops$factor.D.vector, col = "Red", ylim = c(-1,1), 
+            xlab = "Btw Epi vs Per Add", ylab = paste("Spearman rank between populations ",
+                                                      this.pop.a, " and ", this.pop.b, sep = ""))
+    points(c(1:length(means)), means, pch = 3, cex = 0.75)
+    
+    
+    #For loop through the different levels of Factor i
+    ####
+    #Box plot of Spearman rank correlation coefficients of core QTL (Y-axis)
+    ### Against factor levels (X-axis)
+    #End for loop through the different levels of Factor i
+    
+    # End for loop through the main effect pairs of populations 
+  }#End for(this.pop.b in (this.pop.a+1):3)
+}#End for(this.pop.a in 1:2) 
+#End the plot
+dev.off()
+
 
 #########
 #Make a plot of the variance component estimates of trait 2
 #Read in the results for the trait values, genetic values, and breeding values
-trait.values <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/results-analysis-20250421/master.these.trait.values.RDS") 
-genetic.values <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/results-analysis-20250421/master.these.genetic.values.RDS")
-breeding.values <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/results-analysis-20250421/master.these.breeding.values.RDS")
+vc.traits <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/results-var-covar-20240711/master.these.trait.var.covar.RDS") 
+vc.genetic.values <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/results-var-covar-20240711/master.these.genetic.value.var.covar.RDS")
+vc.breeding.values <- readRDS("/Users/alipka/Library/CloudStorage/Box-Box/IR-281/results-var-covar-20240711/master.these.breeding.value.var.covar.RDS")
 #Format the results for trait values, genetic values, and breeding values so that they can be
-################################################
-#IMPORTANT NOTE: for the time being, I am going to make separate plots for each rep
-# Once I have done the heavy lifting to make such plots, I am going to combine the 
-# reps together of a given treatment level into one plot
+# used to make graphs
+###YOU ONLY NEED TO DO THIS FOR THE FIRST ROUND OF RESULTS
+#Problem: you forgot to add the factor and rep levels to the names of VCs
+#Solution: put a for loop around the names and add the factor levels and reps
 
 
-#I think we are going to use a loop that takes the following format
-#Read in the csv file that matches each simulation run with a simulation setting
-the.simulation.settings <- read.csv("Breeding.Values.Match.Run.No.with.Sim.Setting.20250425.csv")
-trait.1 <- NULL
-trait.2 <- NULL
-trait.3 <- NULL
-trait.4 <- NULL
-genetic.value.1 <- NULL
-genetic.value.2 <- NULL
-genetic.value.3 <- NULL
-genetic.value.4 <- NULL
-breeding.value.1 <- NULL
-breeding.value.2 <- NULL
-breeding.value.3 <- NULL
-breeding.value.4 <- NULL
+count <- 1
+for(i in c(1,2,4)){
+  for(j in c(0.05,0.5,1,2)){
+    for(k in c(0.05,0.5,1,2)){
+      for(el in c(0.05,0.5,1,2)){
+        for(rep in 1:3){
+          #Run the function
+          factor.A <- i
+          factor.B <- j
+          factor.C <- k
+          factor.D <- el 
+          this.rep <- rep
+          this.EU.name <-  paste(".Factor.A.", i,
+                                 ".Factor.B.", j,
+                                 ".Factor.C.", k,
+                                 ".Factor.D.", el,
+                                 ".Rep.", this.rep,
+                                 sep = "")
+         
+          #Add the appropriate label to the names here
+
+          names(vc.traits)[count:(count+30)] <- paste(names(vc.traits)[count:(count+30)], 
+                                    this.EU.name, sep = "")
+          names(vc.genetic.values)[count:(count+30)] <- paste(names(vc.genetic.values)[count:(count+30)], 
+                                            this.EU.name, sep = "")
+          names(vc.breeding.values)[count:(count+30)] <- paste(names(vc.breeding.values)[count:(count+30)], 
+                                             this.EU.name, sep = "")
+          
+          #Update the count over here
+          count <- count + 31
+        }#End for(rep in 1:3)
+      }#End for(el in 1:4)
+    }#End for(k in 1:4)
+  }#End for(j in 1:4)
+}#End for(i in 1:3)
+
+
+
+###END YOU ONLY NEED TO DO THIS FOR THE FIRST ROUND OF RESULTS
+###Format the data for making scatter plots
+
+#Create three objects: one for trait values, one for genetic values, and one for breeding values
+# Each of these objects will have information for traits 1-4 for each generation
+trait.1.variance <- NULL
+trait.2.variance <- NULL
+trait.3.variance <- NULL
+trait.4.variance <- NULL
+genetic.value.1.variance <- NULL
+genetic.value.2.variance <- NULL
+genetic.value.3.variance <- NULL
+genetic.value.4.variance <- NULL
+breeding.value.1.variance <- NULL
+breeding.value.2.variance <- NULL
+breeding.value.3.variance <- NULL
+breeding.value.4.variance <- NULL
 factor.A.vector <- NULL
 factor.B.vector <- NULL
 factor.C.vector <- NULL
@@ -55,236 +360,146 @@ rep.vector <- NULL
 subpopulation.vector <- NULL
 selection.number.vector <- NULL
 generation.vector <- NULL
-#####TO do - add quality control check for the genetic values once they are online
+for(i in c(1,2,4)){
+  for(j in c(0.05,0.5,1,2)){
+    for(k in c(0.05,0.5,1,2)){
+      for(el in c(0.05,0.5,1,2)){
+        for(rep in 1:3){
+            #Get the object from the list you want
+            factor.A <- i
+            factor.B <- j
+            factor.C <- k
+            factor.D <- el 
+            this.rep <- rep
+            
+            #Read in the R data file for a given setting
+            this.setting <-  paste(".Factor.A.", i,
+                                   ".Factor.B.", j,
+                                   ".Factor.C.", k,
+                                   ".Factor.D.", el,
+                                   ".Rep.", this.rep,
+                                   sep = "")
+            
+            #Extract the results we want
+            vc.traits.this.setting <- vc.traits[which(grepl(this.setting, names(vc.traits)))]
+            vc.genetic.values.this.setting <- vc.genetic.values[which(grepl(this.setting, names(vc.genetic.values)))]  
+            vc.breeding.values.this.setting <- vc.breeding.values[which(grepl(this.setting, names(vc.breeding.values)))]  
+            
+            #Initiate everything for the founding population
+            factor.A.vector <- c(factor.A.vector, factor.A)
+            factor.B.vector <- c(factor.B.vector, factor.B)
+            factor.C.vector <- c(factor.C.vector, factor.C)
+            factor.D.vector <- c(factor.D.vector, factor.D)
+            rep.vector <- c(rep.vector, this.rep)  
+            subpopulation.vector <- c(subpopulation.vector, "Founder")
+            selection.number.vector <- c(selection.number.vector, "Founder")
+            generation.vector <- c(generation.vector, 0)
+            
+            
+            this.trait.var.covar <- matrix(unlist(vc.traits.this.setting[which((grepl("Founder.pop", names(vc.traits.this.setting)))&
+                                                                                 (grepl(paste("Rep.", this.rep,sep = ""), names(vc.traits.this.setting))))]),nrow = 4)
+            this.genetic.value.var.covar <- matrix(unlist(vc.genetic.values.this.setting[which((grepl("Founder.pop", names(vc.traits.this.setting)))&
+                                                                                                 (grepl(paste("Rep.", this.rep,sep = ""), names(vc.traits.this.setting))))]),nrow = 4)
+            this.breeding.value.var.covar <- matrix(unlist(vc.breeding.values.this.setting[which((grepl("Founder.pop", names(vc.traits.this.setting)))&
+                                                                                                   (grepl(paste("Rep.", this.rep,sep = ""), names(vc.traits.this.setting))))]),nrow = 4)
+            
+            trait.1.variance <- c(trait.1.variance, this.trait.var.covar[1,1])
+            trait.2.variance <- c(trait.2.variance, this.trait.var.covar[2,2])
+            trait.3.variance <- c(trait.3.variance, this.trait.var.covar[3,3])
+            trait.4.variance <- c(trait.4.variance, this.trait.var.covar[4,4]) 
+            genetic.value.1.variance <- c(genetic.value.1.variance, this.genetic.value.var.covar[1,1])
+            genetic.value.2.variance <- c(genetic.value.2.variance, this.genetic.value.var.covar[2,2])
+            genetic.value.3.variance <- c(genetic.value.3.variance, this.genetic.value.var.covar[3,3])
+            genetic.value.4.variance <- c(genetic.value.4.variance, this.genetic.value.var.covar[4,4])
+            breeding.value.1.variance <- c(breeding.value.1.variance, this.breeding.value.var.covar[1,1])
+            breeding.value.2.variance <- c(breeding.value.2.variance, this.breeding.value.var.covar[2,2])
+            breeding.value.3.variance <- c(breeding.value.3.variance, this.breeding.value.var.covar[3,3])
+            breeding.value.4.variance <- c(breeding.value.4.variance, this.breeding.value.var.covar[4,4])        
+            
+            
+            #For loop through the different types of selection
+            
+            
+            for(this.selection.type in c("Direct","Disruptive","Stabilizing")){           
+              for(this.selection.number in c("112", "224")){
+                #vc.traits.this.subpop <- vc.traits.this.setting[which(grepl(this.selection.type, names(vc.traits.this.setting)))]
+                vc.traits.this.subpop <- vc.traits.this.setting[which((grepl(this.selection.type, names(vc.traits.this.setting))) & 
+                                                                        (grepl(this.selection.number, names(vc.traits.this.setting))) )]
+                vc.genetic.values.this.subpop <- vc.genetic.values.this.setting[which((grepl(this.selection.type, names(vc.traits.this.setting))) & 
+                                                                                        (grepl(this.selection.number, names(vc.traits.this.setting))) )]  
+                vc.breeding.values.this.subpop <- vc.breeding.values.this.setting[which((grepl(this.selection.type, names(vc.traits.this.setting))) & 
+                                                                                          (grepl(this.selection.number, names(vc.traits.this.setting))) )]  
+                
+                
+                for(this.generation in 1:10){
+                  
+                  factor.A.vector <- c(factor.A.vector, factor.A)
+                  factor.B.vector <- c(factor.B.vector, factor.B)
+                  factor.C.vector <- c(factor.C.vector, factor.C)
+                  factor.D.vector <- c(factor.D.vector, factor.D)
+                  rep.vector <- c(rep.vector, this.rep)  
+                  subpopulation.vector <- c(subpopulation.vector, this.selection.type)
+                  selection.number.vector <- c(selection.number.vector, this.selection.number)
+                  generation.vector <- c(generation.vector, this.generation)
+                  
+                  this.trait.var.covar <- matrix(unlist(vc.traits.this.subpop[which(grepl(paste("Gen.",this.generation, ".Factor", sep = ""), names(vc.traits.this.subpop)))]),nrow = 4)
+                  this.genetic.value.var.covar <- matrix(unlist(vc.genetic.values.this.subpop[which(grepl(paste(this.generation), names(vc.genetic.values.this.subpop)))]),nrow = 4)
+                  this.breeding.value.var.covar <- matrix(unlist(vc.breeding.values.this.subpop[which(grepl(paste(this.generation),names(vc.breeding.values.this.subpop)))]),nrow = 4)
+                  
+                  trait.1.variance <- c(trait.1.variance, this.trait.var.covar[1,1])
+                  trait.2.variance <- c(trait.2.variance, this.trait.var.covar[2,2])
+                  trait.3.variance <- c(trait.3.variance, this.trait.var.covar[3,3])
+                  trait.4.variance <- c(trait.4.variance, this.trait.var.covar[4,4]) 
+                  genetic.value.1.variance <- c(genetic.value.1.variance, this.genetic.value.var.covar[1,1])
+                  genetic.value.2.variance <- c(genetic.value.2.variance, this.genetic.value.var.covar[2,2])
+                  genetic.value.3.variance <- c(genetic.value.3.variance, this.genetic.value.var.covar[3,3])
+                  genetic.value.4.variance <- c(genetic.value.4.variance, this.genetic.value.var.covar[4,4])
+                  breeding.value.1.variance <- c(breeding.value.1.variance, this.breeding.value.var.covar[1,1])
+                  breeding.value.2.variance <- c(breeding.value.2.variance, this.breeding.value.var.covar[2,2])
+                  breeding.value.3.variance <- c(breeding.value.3.variance, this.breeding.value.var.covar[3,3])
+                  breeding.value.4.variance <- c(breeding.value.4.variance, this.breeding.value.var.covar[4,4])
+                  
+                  
+                }#End for loop through the generations:for(this.generation in 1:10)
+              }#End for loop through the number of individuals to select
+          }#End for loop through the different types of selection: for(this.selection type in c("Direct","Disruptive","Stabilizing"))
+        }#End for(rep in 1:3)
+      }#End for(el in 1:4)
+    }#End for(k in 1:4)
+  }#End for(j in 1:4)
+}#End for(i in 1:3)
 
-for(sim.rep.index in 1:length(trait.values)){
-  print(paste("Oh yeah!!!!! We are starting sim.rep.index ", sim.rep.index, sep = " "))
-  #Quality control check: Make sure that the setting match up for trait values and breeding values
-  if(names(trait.values[sim.rep.index][1]) != names(breeding.values[sim.rep.index][1])){
-    print(paste("Trait values and breeding values do not match up for sim.rep.index: ", sim.rep.index, sep = ""))
-  } 
-  
-  #Figure out what are the corresponding levels of the simulation study
-  this.setting.in.spreadsheet <- which(the.simulation.settings$setting.name == names(trait.values[sim.rep.index][1]))
-  factor.A <- the.simulation.settings$i[this.setting.in.spreadsheet]
-  factor.B <- the.simulation.settings$j[this.setting.in.spreadsheet]
-  factor.C <- the.simulation.settings$k[this.setting.in.spreadsheet]
-  factor.D <- the.simulation.settings$el[this.setting.in.spreadsheet] 
-  this.rep <- the.simulation.settings$r[this.setting.in.spreadsheet]
-  
-  #Extract the results we want
-  traits.values.this.setting <- trait.values[[sim.rep.index]]
-  genetic.values.this.setting <- NA 
-  breeding.values.this.setting <- breeding.values[[sim.rep.index]] 
-  
-  #Initiate everything for the founding population
-  #factor.A.vector <- c(factor.A.vector, factor.A)
-  #factor.B.vector <- c(factor.B.vector, factor.B)
-  #factor.C.vector <- c(factor.C.vector, factor.C)
-  #factor.D.vector <- c(factor.D.vector, factor.D)
-  #rep.vector <- c(rep.vector, this.rep)  
-  #subpopulation.vector <- c(subpopulation.vector, "Founder")
-  #selection.number.vector <- c(selection.number.vector, "Founder")
-  #generation.vector <- c(generation.vector, 0)
-  
-  for(this.selection.type in c("directional","disruptive","stabilizing")){           
-    for(this.selection.number in c("112", "224")){
-      
-      print(paste("This is the deeeebug line for ",this.selection.type, " and ",this.selection.number, sep = " "))
-      #vc.traits.this.subpop <- vc.traits.this.setting[which(grepl(this.selection.type, names(vc.traits.this.setting)))]
-      traits.this.subpop <- traits.values.this.setting[which((grepl(this.selection.type, names(traits.values.this.setting))) & 
-                                                              (grepl(this.selection.number, names(traits.values.this.setting))) )]
-      #genetic.values.this.subpop <- genetic.values.this.setting[which((grepl(this.selection.type, names(genetic.values.this.setting))) & 
-       #                                                                       (grepl(this.selection.number, names(genetic.values.this.setting))) )]  
-      breeding.values.this.subpop <-  breeding.values.this.setting[which((grepl(this.selection.type, names(breeding.values.this.setting))) & 
-                                                                                (grepl(this.selection.number, names(breeding.values.this.setting))) )]  
-      
-      
-      for(this.generation in 1:10){
-        
-
-        this.trait.values <- matrix(unlist(traits.this.subpop[this.generation]), ncol = 4)
-        #this.genetic.values <- matrix(unlist(genetic.values.this.subpop[this.generation]), ncol = 4)
-        this.breeding.values <- matrix(unlist(breeding.values.this.subpop[this.generation]), ncol = 4)
-       
-        factor.A.vector <- c(factor.A.vector, rep(factor.A, nrow(this.trait.values)))
-        factor.B.vector <- c(factor.B.vector, rep(factor.B, nrow(this.trait.values)))
-        factor.C.vector <- c(factor.C.vector, rep(factor.C, nrow(this.trait.values)))
-        factor.D.vector <- c(factor.D.vector, rep(factor.D, nrow(this.trait.values)))
-        rep.vector <- c(rep.vector, rep(this.rep, nrow(this.trait.values))  )  
-        subpopulation.vector <- c(subpopulation.vector, rep(this.selection.type, nrow(this.trait.values)))
-        selection.number.vector <- c(selection.number.vector, rep(this.selection.number, nrow(this.trait.values)))
-        generation.vector <- c(generation.vector, rep(this.generation, nrow(this.trait.values))) 
-        
-        trait.1 <- c(trait.1, this.trait.values[,1])
-        trait.2 <- c(trait.2, this.trait.values[,2])
-        trait.3 <- c(trait.3, this.trait.values[,3])
-        trait.4 <- c(trait.4, this.trait.values[,4])
-        
-        print(paste("For Generation ",this.generation, " the median peripheral value is ", median(this.trait.values[,3])  ))
-        
-        #genetic.value.1 <- c(genetic.value.1, this.genetic.values[,1])
-        #genetic.value.2 <- c(genetic.value.2, this.genetic.values[,2])
-        #genetic.value.3 <- c(genetic.value.3, this.genetic.values[,3])
-        #genetic.value.4 <- c(genetic.value.4, this.genetic.values[,4])
-  
-        
-        genetic.value.1 <- c(genetic.value.1, rep(NA, nrow(this.trait.values)) )
-        genetic.value.2 <- c(genetic.value.2, rep(NA, nrow(this.trait.values)))
-        genetic.value.3 <- c(genetic.value.3, rep(NA, nrow(this.trait.values)))
-        genetic.value.4 <- c(genetic.value.4, rep(NA, nrow(this.trait.values)))
-        
-        breeding.value.1 <- c(breeding.value.1, this.breeding.values[,1])
-        breeding.value.2 <- c(breeding.value.2, this.breeding.values[,2])
-        breeding.value.3 <- c(breeding.value.3, this.breeding.values[,3])
-        breeding.value.4 <- c(breeding.value.4, this.breeding.values[,4])
-
-     
-      }#End for loop through the generations:for(this.generation in 1:10)
-    }#End for loop through the number of individuals to select
-  }#End for loop through the different types of selection: for(this.selection type in c("Direct","Disruptive","Stabilizing"))
-  
-  #Compile all of the information together into a data frame
-  data.for.trait.value.scatterplot <- data.frame(trait.1, trait.2, trait.3, trait.4,
-                                                 genetic.value.1, genetic.value.2,
-                                                 genetic.value.3, genetic.value.4,
-                                                 breeding.value.1, breeding.value.2,
-                                                 breeding.value.3, breeding.value.4,
-                                                 factor.A.vector, factor.B.vector, factor.C.vector,
-                                                 factor.D.vector, rep.vector,subpopulation.vector, selection.number.vector, 
-                                                 generation.vector)
-  
-  #Make the graphs
- 
-  
-  this.min.y.axis <- min(data.for.trait.value.scatterplot[,c(1:4, 9:12)])
-  this.max.y.axis <- max(data.for.trait.value.scatterplot[,c(1:4, 9:12)])
-  
-  
-   the.plot.trait.traits <- ggplot(data.for.trait.value.scatterplot,  aes(x = generation.vector)) + ylim(this.min.y.axis,this.max.y.axis)+
-    xlab("Generation Number") + theme(axis.title.x = element_text(size = 20)) + theme(axis.title.y = element_text(size = 20))+
-    theme(axis.text = element_text(size = 15))
-   
-   #the.plot.trait.genetic.value <- ggplot(data.for.trait.value.scatterplot,  aes(x = generation.vector)) + ylim(this.min.y.axis,this.max.y.axis) + 
-    # xlab("Generation Number") + theme(axis.title.x = element_text(size = 20)) + theme(axis.title.y = element_text(size = 20))+
-   #  theme(axis.text = element_text(size = 15))
-   
-   the.plot.trait.breeding.value <- ggplot(data.for.trait.value.scatterplot,  aes(x = generation.vector)) + ylim(this.min.y.axis,this.max.y.axis) + 
-     xlab("Generation Number") + theme(axis.title.x = element_text(size = 20)) + theme(axis.title.y = element_text(size = 20))+
-     theme(axis.text = element_text(size = 15))
-  
-   line.types <- c("twodash", "solid", "longdash", "dotted", "dotdash", "dashed")
-   count <- 1
-   this.population <- NULL
-   for(this.selection.type in unique(data.for.trait.value.scatterplot$subpopulation.vector)){
-     for(this.selection.number in unique(data.for.trait.value.scatterplot$selection.number.vector)){
-       this.line.type <- line.types[count]
-       this.population <- c(this.population, paste(this.selection.type, ": ", this.selection.number, sep= ""))
-       #Source in the code below that will help make these plots
-       input.scatter.plot.data <- data.for.trait.value.scatterplot[which(((data.for.trait.value.scatterplot$subpopulation.vector == this.selection.type)&
-                                                                                     data.for.trait.value.scatterplot$selection.number.vector == this.selection.number) ),] 
-       
-       #Add information for this subpopulation to the plot of variance components for traits
-       source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/omnigenic_sim/Functions_to_Make_Life_Easier/Make_Trait_Scatter_Plots_Traits_20250429.R")
-       
-       #Add information for this subpopulation to the plot of variance components for the genetic values
-       #source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/omnigenic_sim/Functions_to_Make_Life_Easier/Make_Trait_Scatter_Genetic_Values_20250430.R")
-       
-       #Add information for this subpopulation to the plot of variance components for the breeding values
-       source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/omnigenic_sim/Functions_to_Make_Life_Easier/Make_Trait_Scatter_Breeding_Values_20250430.R")
-       
-       count <- count+1
-     }#End  for(this.selection.number in unique(data.for.vc.scatterplot.this.factor.level$selection.number.vector)[-1])
-   }#End for(this.selection.type in unique(data.for.vc.scatterplot.this.factor.level$subpopulation.vector)[-1]) 
-   
-   
-   #Temporary template code:
-   
-   
-   
-   pdf(paste("Trait_Value_Plots/Trait.Values.Factor.A.",factor.A,".Factor.B.",factor.B,
-             ".Factor.C.", factor.C, ".Factor.D.", factor.D, ".Rep.",this.rep,".plot.trait.values.pdf", sep = ""), width = 10)
-     print(the.plot.trait.traits) 
-     #This code is modified from here: https://stackoverflow.com/questions/57984046/how-to-create-a-stand-alone-legend-in-r
-     plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1)
-     legend("topleft", legend = this.population, lty = line.types)
-     legend("topright", legend = c("Trait", "Core", "Peripheral", "CxP"),
-            fill = c("black", "red", "blue", "purple"))
-   dev.off()
-   
-   #pdf(paste("Trait_Value_Plots/Trait.Values.Factor.A.",factor.A,".Factor.B.",factor.B,
-  #      ".Factor.C.", factor.C, ".Factor.D.", factor.D, ".Rep.",this.rep,".plot.genetic.values.pdf", sep = ""), width = 10)
-   #print(tthe.plot.trait.genetic.value)
-   #This code is modified from here: https://stackoverflow.com/questions/57984046/how-to-create-a-stand-alone-legend-in-r
-   #plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1)
-   #legend("topleft", legend = this.population, lty = line.types)
-   #legend("topright", legend = c("Trait", "Core", "Peripheral", "CxP"),
-  #        fill = c("black", "red", "blue", "purple"))
-  # dev.off()
-   
-   pdf(paste("Trait_Value_Plots/Trait.Values.Factor.A.",factor.A,".Factor.B.",factor.B,
-             ".Factor.C.", factor.C, ".Factor.D.", factor.D, ".Rep.",this.rep,".plot.breeding.values.pdf", sep = ""), width = 10)
-     print(the.plot.trait.breeding.value)
-     #This code is modified from here: https://stackoverflow.com/questions/57984046/how-to-create-a-stand-alone-legend-in-r
-     plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1)
-     legend("topleft", legend = this.population, lty = line.types)
-     legend("topright", legend = c("Trait", "Core", "Peripheral", "CxP"),
-            fill = c("black", "red", "blue", "purple"))
-   dev.off()
-   
-   
- 
-  
-  
-  
-  #Reinitiate the objects
-  trait.1 <- NULL
-  trait.2 <- NULL
-  trait.3 <- NULL
-  trait.4 <- NULL
-  genetic.value.1 <- NULL
-  genetic.value.2 <- NULL
-  genetic.value.3 <- NULL
-  genetic.value.4 <- NULL
-  breeding.value.1 <- NULL
-  breeding.value.2 <- NULL
-  breeding.value.3 <- NULL
-  breeding.value.4 <- NULL
-  factor.A.vector <- NULL
-  factor.B.vector <- NULL
-  factor.C.vector <- NULL
-  factor.D.vector <- NULL
-  rep.vector <- NULL
-  subpopulation.vector <- NULL
-  selection.number.vector <- NULL
-  generation.vector <- NULL
-}
-
-
-
-
+data.for.vc.scatterplot <- data.frame(trait.1.variance, trait.2.variance,
+                                      trait.3.variance, trait.4.variance,
+                                      genetic.value.1.variance, genetic.value.2.variance,
+                                      genetic.value.3.variance, genetic.value.4.variance,
+                                      breeding.value.1.variance, breeding.value.2.variance,
+                                      breeding.value.3.variance, breeding.value.4.variance,
+                                      factor.A.vector, factor.B.vector, factor.C.vector,
+                                      factor.D.vector, rep.vector,subpopulation.vector, selection.number.vector, 
+                                      generation.vector)
 
 
 
 #For loop through the factors; index on "this.factor"
-for(this.factor in which(grepl("factor",colnames(data.for.trait.value.scatterplot)))){
+for(this.factor in which(grepl("factor",colnames(data.for.vc.scatterplot)))){
   #For loop through each level of the ith factor - there will be one pdf per factor (maybe create a subdirectory for this); index on "this.level"
     #For loop through the different levels of Factor i (columns)
-     for(this.level in unique(data.for.trait.value.scatterplot[,this.factor])){
-       data.for.trait.value.scatterplot.this.factor.level <- data.for.trait.value.scatterplot[which(data.for.trait.value.scatterplot[,this.factor] == this.level),]
-       pdf(paste("VC_Plots/VC.Factor",substr(colnames(data.for.trait.value.scatterplot)[this.factor],start = 7,stop = 9),"Level.",this.level,".plot.trait.genetic.breeding.value.three.selection.types.pdf", sep = ""), width = 50)
+     for(this.level in unique(data.for.vc.scatterplot[,this.factor])){
+       data.for.vc.scatterplot.this.factor.level <- data.for.vc.scatterplot[which(data.for.vc.scatterplot[,this.factor] == this.level),]
+       pdf(paste("VC_Plots/VC.Factor",substr(colnames(data.for.vc.scatterplot)[this.factor],start = 7,stop = 9),"Level.",this.level,".plot.trait.genetic.breeding.value.three.selection.types.pdf", sep = ""), width = 50)
       #For loop through the different kind of selection/subpopulation levels; index on this.selection.type 
-       for(this.selection.type in unique(data.for.trait.value.scatterplot.this.factor.level$subpopulation.vector)[-1]){
+       for(this.selection.type in unique(data.for.vc.scatterplot.this.factor.level$subpopulation.vector)[-1]){
          #- there will be a different page for each selection/subpopulation level ####
-         for(this.selection.number in unique(data.for.trait.value.scatterplot.this.factor.level$selection.number.vector)[-1]){
+         for(this.selection.number in unique(data.for.vc.scatterplot.this.factor.level$selection.number.vector)[-1]){
            #Source in the code below that will help make these plots
-           input.scatter.plot.data <- data.for.trait.value.scatterplot.this.factor.level[which((data.for.trait.value.scatterplot.this.factor.level$subpopulation.vector == "Founder")|
-                                                                                        ((data.for.trait.value.scatterplot.this.factor.level$subpopulation.vector == this.selection.type)&
-                                                                                           data.for.trait.value.scatterplot.this.factor.level$selection.number.vector == this.selection.number) ),] 
+           input.scatter.plot.data <- data.for.vc.scatterplot.this.factor.level[which((data.for.vc.scatterplot.this.factor.level$subpopulation.vector == "Founder")|
+                                                                                        ((data.for.vc.scatterplot.this.factor.level$subpopulation.vector == this.selection.type)&
+                                                                                           data.for.vc.scatterplot.this.factor.level$selection.number.vector == this.selection.number) ),] 
            y.axis.label <- paste("log(Variance)",sep = "")
-           this.min.y.axis <- log(min(data.for.trait.value.scatterplot.this.factor.level[,which(grepl("variance",
+           this.min.y.axis <- log(min(data.for.vc.scatterplot.this.factor.level[,which(grepl("variance",
                                                                                              colnames(input.scatter.plot.data)))]))
-           this.max.y.axis <- log(max(data.for.trait.value.scatterplot.this.factor.level[,which(grepl("variance",
+           this.max.y.axis <- log(max(data.for.vc.scatterplot.this.factor.level[,which(grepl("variance",
                                                                                              colnames(input.scatter.plot.data)))]))
            #Source in some gplot code that will the first row plots; this time for the four trait values
            source("/Users/alipka/Library/CloudStorage/Box-Box/Sabbatical_Roslin_Institute/R_workspace/omnigenic_sim/Functions_to_Make_Life_Easier/Make_VC_Scatter_Plots_Traits_20240715.R")
@@ -315,11 +530,11 @@ for(this.factor in which(grepl("factor",colnames(data.for.trait.value.scatterplo
                            nrow = 3, ncol = 4))
            
            
-         }#End  for(this.selection.number in unique(data.for.trait.value.scatterplot.this.factor.level$selection.number.vector)[-1])
-       }#End for(this.selection.type in unique(data.for.trait.value.scatterplot.this.factor.level$subpopulation.vector)[-1]) 
+         }#End  for(this.selection.number in unique(data.for.vc.scatterplot.this.factor.level$selection.number.vector)[-1])
+       }#End for(this.selection.type in unique(data.for.vc.scatterplot.this.factor.level$subpopulation.vector)[-1]) 
       dev.off()
-    }#End for(this.level in unique(data.for.trait.value.scatterplot[,this.factor]))for loop through each level of the ith factor
-}#End  for(this.factor in grepl("factor",colnames(data.for.trait.value.scatterplot))) for loop through the factors
+    }#End for(this.level in unique(data.for.vc.scatterplot[,this.factor]))for loop through each level of the ith factor
+}#End  for(this.factor in grepl("factor",colnames(data.for.vc.scatterplot))) for loop through the factors
 
 
 
