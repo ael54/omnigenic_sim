@@ -6,7 +6,7 @@ list.of.subpopulation.traits <- list(directional.subpopulation.trait.10.pct, dir
                                      disruptive.subpopulation.trait.10.prev.gen,disruptive.subpopulation.trait.20.prev.gen,
                                      stabilizing.subpopulation.trait.10.prev.gen,stabilizing.subpopulation.trait.20.prev.gen)
 
-list.of.subpopulation.SNP <- list(directional.subpopulation.10.pct.SNPs, directional.subpopulation.20.pct.SNPs,
+list.of.subpopulation.SNPs <- list(directional.subpopulation.10.pct.SNPs, directional.subpopulation.20.pct.SNPs,
                                   disruptive.subpopulation.10.pct.SNPs, disruptive.subpopulation.20.pct.SNPs,
                                   stabilizing.subpopulation.10.pct.SNPs, stabilizing.subpopulation.20.pct.SNPs,
                                   directional.subpopulation.10.prev.gen.SNPs, directional.subpopulation.20.prev.gen.SNPs,
@@ -80,7 +80,7 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   training.set.3b <- c(training.set.3b, 0)
  
    ####Standard GBLUP model
-  source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another.R")
+  source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another_using_SNPs.R")
   prediction.accuracy.GBLUP <- c(prediction.accuracy.GBLUP, r.gy) 
   
   
@@ -94,7 +94,7 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   training.set.3b <- c(training.set.3b, 0)
   
   ####Standard GBLUP model
-  source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another.R")
+  source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another_using_SNPs.R")
   prediction.accuracy.GBLUP <- c(prediction.accuracy.GBLUP, r.gy) 
  
  
@@ -110,7 +110,7 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   training.set.3b <- c(training.set.3b, 0)
   
   #Standard GBLUP model
-  source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another.R")
+  source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another_using_SNPs.R")
   prediction.accuracy.GBLUP <- c(prediction.accuracy.GBLUP, r.gy) 
   
   ###############################################
@@ -124,7 +124,7 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   training.set.3b <- c(training.set.3b, 0)
   
   #Standard GBLUP model
-  source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another.R")
+  source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another_using_SNPs.R")
   prediction.accuracy.GBLUP <- c(prediction.accuracy.GBLUP, r.gy) 
   
   #Standard GBLUP model
@@ -139,7 +139,7 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   training.set.3b <- c(training.set.3b, 1)
   
   #Standard GBLUP model
-  source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another.R")
+  source("QG_Analysis_Code/Run_GBLUP_Train_in_One_Pop_Validate_in_Another_using_SNPs.R")
   prediction.accuracy.GBLUP <- c(prediction.accuracy.GBLUP, r.gy) 
   
   #Multi-kernel model where the additive effects of core and peripheral
@@ -217,14 +217,14 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   
   #####Multi-kernel model where the additive effects of core and peripheral
   # SNP are separate
-  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only.R")
+  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R")
   prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R run successfully!")
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # SNP are separate
-  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi.R")
+  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R")
   prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R run successfully!")
   
   # the training set
   this.training.set <- this.training.set.1
@@ -237,14 +237,14 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   
   #####Multi-kernel model where the additive effects of core and peripheral
   # SNP are separate
-  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only.R")
+  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R")
   prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R run successfully AGAIN!")
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # SNP are separate
-  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi.R")
+  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R")
   prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R run successfully AGAIN!")
   
   ##################################################################
   #Run genomic prediction using the second of the other two populations as 
@@ -259,14 +259,14 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   
   #####Multi-kernel model where the additive effects of core and peripheral
   # SNP are separate
-  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only.R")
+  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R")
   prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R run successfully AGAIN 2!")
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # SNP are separate
-  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi.R")
+  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R")
   prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R run successfully AGAIN 2!")
   ###############################################
   # the training set
   this.training.set <- this.training.set.3a
@@ -279,14 +279,14 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   
   #####Multi-kernel model where the additive effects of core and peripheral
   # SNP are separate
-  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only.R")
+  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R")
   prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R run successfully AGAIN 3!")
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # SNP are separate
-  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi.R")
+  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R")
   prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R run successfully AGAIN 3!")
   #Standard GBLUP model
   ###############################################
   # the training set
@@ -300,14 +300,14 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   
   #####Multi-kernel model where the additive effects of core and peripheral
   # SNP are separate
-  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only.R")
+  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R")
   prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_Only_using_SNPs.R run successfully AGAIN 4!")
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # SNP are separate
-  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi.R")
+  source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R")
   prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_and_Epi_using_SNPs.R run successfully AGAIN 4!")
   #Multi-kernel model where the additive effects of core and peripheral
   # SNP are separate
   
@@ -318,7 +318,4 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   
 } # End for(i in 1:length(names.of.subpopulations))
 prediction.accuracies.SNPs  <- data.frame(prediction.accuracies.SNPs, prediction.accuracy.Multi.Kern.No.Epi,
-                                    prediction.accuracy.Multi.Kern.With.Epi)
-
-
-
+                                          prediction.accuracy.Multi.Kern.With.Epi)

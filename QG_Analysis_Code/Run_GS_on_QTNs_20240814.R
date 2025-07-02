@@ -219,12 +219,12 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only.R")
   prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_Only.R run successfully!")
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi.R")
   prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_and_Epi.R run successfully!")
   
   # the training set
   this.training.set <- this.training.set.1
@@ -239,12 +239,12 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only.R")
   prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_Only.R run successfully AGAIN!")
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi.R")
   prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_and_Epi.R run successfully AGAIN!")
   
   ##################################################################
   #Run genomic prediction using the second of the other two populations as 
@@ -261,11 +261,12 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only.R")
   prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_Only.R run successfully AGAIN 2!")
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi.R")
   prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
+  print("Yes! Run_Multi_Kernel_BLUP_Add_and_Epi.R run successfully AGAIN 2!")
   
   ###############################################
   # the training set
@@ -281,12 +282,12 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only.R")
   prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_Only.R run successfully AGAIN 3!")
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi.R")
   prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_and_Epi.R run successfully AGAIN 3!")
   #Standard GBLUP model
   ###############################################
   # the training set
@@ -302,12 +303,12 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_Only.R")
   prediction.accuracy.Multi.Kern.No.Epi <- c(prediction.accuracy.Multi.Kern.No.Epi,  r.gy.add.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_Only.R run successfully AGAIN 4!")
   #####Multi-kernel model where the additive and epistatic effects of core and peripheral
   # QTN are separate
   source("QG_Analysis_Code/Run_Multi_Kernel_BLUP_Add_and_Epi.R")
   prediction.accuracy.Multi.Kern.With.Epi <- c(prediction.accuracy.Multi.Kern.With.Epi, r.gy.add.epi.mult.kern)
-  
+  print("Yes! Run_Multi_Kernel_BLUP_Add_and_Epi.R run successfully AGAIN 4!")
   #Multi-kernel model where the additive effects of core and peripheral
   # QTN are separate
   
@@ -318,7 +319,7 @@ for(eye in 1:(length(names.of.subpopulations)/2)){
   
 } # End for(i in 1:length(names.of.subpopulations))
 prediction.accuracies.QTNs  <- data.frame(prediction.accuracies.QTNs, prediction.accuracy.Multi.Kern.No.Epi,
-                                    prediction.accuracy.Multi.Kern.With.Epi)
+                                          prediction.accuracy.Multi.Kern.With.Epi)
 
 
 

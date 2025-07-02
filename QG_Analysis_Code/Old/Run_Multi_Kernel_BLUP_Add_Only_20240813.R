@@ -54,10 +54,10 @@
   
   my.G.for.pipeline <- rbind(my.G.validation, my.G.training)
   my.G.for.pipeline.core <- my.G.for.pipeline[,which(colnames(my.G.for.pipeline) %in% 
-                                                           paste("X", four.traits.omni.core.peri.coreperi$core.genes$core.genes, sep = ""))]
+                                                           paste("X", this.simulated.trait$core.genes$core.genes, sep = ""))]
   
   my.G.for.pipeline.peripheral <- my.G.for.pipeline[,-c(1,which(colnames(my.G.for.pipeline) %in% 
-                                                           paste("X", four.traits.omni.core.peri.coreperi$core.genes$core.genes, sep = "")))]
+                                                           paste("X", this.simulated.trait$core.genes$core.genes, sep = "")))]
   
   
   
@@ -112,15 +112,8 @@
   A1.peripheral <- A.mat(G.peripheral)
   colnames(A1.peripheral) <- rownames(A1.peripheral) <- c(1:nrow(y))  
   
-  A1.core.core <- A1.core*A1.core
-  
-  A1.peripheral.peripheral <- A1.peripheral*A1.peripheral
-  
-  A1.core.peripheral <- A1.core*A1.peripheral
-  
   ############################################################################################
  
-
   
   sample.size <- nrow(y)
   
@@ -140,41 +133,28 @@
   #####data2 is for the double-kernel model. The additional columne, gid2 is needed
   #########so that we can distinguish between the random effects corresponding to 
   ########### each fo the two kernels
-  data2 <- data.frame(y=yNA,gid=1:length(y),gid2=1:length(y),gid3=1:length(y),
-                      gid4 = 1:length(y), gid5 = 1:length(y), cv = cv)
+  data2 <- data.frame(y=yNA,gid=1:length(y),gid2=1:length(y), cv = cv)
   the.cv.names <- NULL
   for(j in 1:ncol(cv)) the.cv.names <- c(the.cv.names, paste("CV_",j,sep = ""))
   
-  colnames(data2) <- c("y","gid", "gid2","gid3","gid4", "gid5", the.cv.names)
+  colnames(data2) <- c("y","gid", "gid2", the.cv.names)
   data2$gid <- as.character(data2$gid)
   data2$gid2 <- as.character(data2$gid2)
-  data2$gid3 <- as.character(data2$gid3)
-  data2$gid4 <- as.character(data2$gid4)
-  data2$gid5 <- as.character(data2$gid5)
-  
   
   rownames(A1.core) <- 1:nrow(A1.core)
   rownames(A1.peripheral) <- 1:nrow(A1.peripheral)
-  rownames(A1.core.core) <- 1:nrow(A1.core.core)
-  rownames(A1.peripheral.peripheral) <- 1:nrow(A1.peripheral.peripheral)
-  rownames(A1.core.peripheral) <- 1:nrow(A1.core.peripheral)
-  
+ 
   #Here is where the magic happens - this is where the two-kernel GS model is fitted
-  ans.multiple.kernel <- mmer(y~1, random = ~vsr(gid, Gu = A1.core)+vsr(gid2, Gu = A1.peripheral)
-                              +vsr(gid3, Gu = A1.core.core)+vsr(gid4, Gu = A1.peripheral.peripheral)
-                              +vsr(gid5, Gu = A1.core.peripheral),
+  ans.multiple.kernel <- mmer(y~1, random = ~vsr(gid, Gu = A1.core)+vsr(gid2, Gu = A1.peripheral),
                               data = data2, verbose = FALSE)
   GEBVs <- as.data.frame(ans.multiple.kernel$U$`u:gid`$y+
-                           ans.multiple.kernel$U$`u:gid2`$y+
-                           ans.multiple.kernel$U$`u:gid3`$y+
-                           ans.multiple.kernel$U$`u:gid4`$y+
-                           ans.multiple.kernel$U$`u:gid5`$y)
+                           ans.multiple.kernel$U$`u:gid2`$y)
   GEBVs  <- data.frame(as.numeric(rownames(GEBVs)), GEBVs )
   GEBVs <- GEBVs[order(GEBVs[,1]),]  
   
  
   #r.gy <- c(r.gy, cor(ans$g.pred,y[pred]))
-  r.gy.add.epi.mult.kern <- cor(GEBVs[pred,2], y[pred]) 
+  r.gy.add.mult.kern <- cor(GEBVs[pred,2], y[pred]) 
   
   
  #End rrblup.tenfoldCV

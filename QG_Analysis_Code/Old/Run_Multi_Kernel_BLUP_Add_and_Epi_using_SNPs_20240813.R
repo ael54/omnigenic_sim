@@ -27,19 +27,19 @@
   this.trait.name <- colnames(my.Y.for.pipeline)[2]
   
   #Read in the genotypic data
-  my.G.validation <- data.frame(row.names(list.of.subpopulation.QTN[[this.validation.set]]),
-                                list.of.subpopulation.QTN[[this.validation.set]])
+  my.G.validation <- data.frame(row.names(list.of.subpopulation.SNPs[[this.validation.set]]),
+                                list.of.subpopulation.SNPs[[this.validation.set]])
   colnames(my.G.validation)[1] <- "taxa"
   
   if(length(this.training.set)==1){
-    my.G.training <- data.frame(row.names(list.of.subpopulation.QTN[[this.training.set]]),
-                                list.of.subpopulation.QTN[[this.training.set]])
+    my.G.training <- data.frame(row.names(list.of.subpopulation.SNPs[[this.training.set]]),
+                                list.of.subpopulation.SNPs[[this.training.set]])
     colnames(my.G.training)[1] <- "taxa"
   }else{
     counter <- 0
     for(j in this.training.set){
-      this.my.G.training <- data.frame(row.names(list.of.subpopulation.QTN[[j]]),
-                                       list.of.subpopulation.QTN[[j]])
+      this.my.G.training <- data.frame(row.names(list.of.subpopulation.SNPs[[j]]),
+                                       list.of.subpopulation.SNPs[[j]])
       colnames(this.my.G.training)[1] <- "taxa"
       if(counter == 0){
         my.G.training <- this.my.G.training
@@ -53,12 +53,49 @@
   
   
   my.G.for.pipeline <- rbind(my.G.validation, my.G.training)
-  my.G.for.pipeline.core <- my.G.for.pipeline[,which(colnames(my.G.for.pipeline) %in% 
-                                                           paste("X", four.traits.omni.core.peri.coreperi$core.genes$core.genes, sep = ""))]
   
-  my.G.for.pipeline.peripheral <- my.G.for.pipeline[,-c(1,which(colnames(my.G.for.pipeline) %in% 
-                                                           paste("X", four.traits.omni.core.peri.coreperi$core.genes$core.genes, sep = "")))]
+  #Obtain the row numbers of SNPs that are within 0.05 cM of each QTN
+  list.of.col.numbers <- NULL
+  for(j in 1:nrow(this.simulated.trait$core.genes)){
+    # Extract the chromosome and bp position of the start site
+    row.number.of.QTN <- which(the.physical.map.of.QTLs$id == this.simulated.trait$core.genes$core.genes[j])
+    this.chr.start <- as.numeric(the.physical.map.of.QTLs$chr[row.number.of.QTN])
+    this.bp.start <- the.physical.map.of.QTLs$pos[row.number.of.QTN] - 0.05
+    
+    # Extract the chromosome and bp position of the stop site
+    this.chr.stop <- as.numeric(the.physical.map.of.QTLs$chr[row.number.of.QTN])
+    this.bp.stop <- the.physical.map.of.QTLs$pos[row.number.of.QTN] + 0.05    
+    
+    #Identify the row numbers of the desired SNPs
+    
+    #In most cases the genomic region of interest will be on the same chromosome
+    # Therefore the following code will be used
+    if(this.chr.start == this.chr.stop){
+      these.col.numbers <- which((as.numeric(the.physical.map.of.SNPs$chr)==this.chr.start) 
+                                 & (as.numeric(the.physical.map.of.SNPs$pos) >= this.bp.start) 
+                                 & (as.numeric(the.physical.map.of.SNPs$chr)==this.chr.stop) 
+                                 & (as.numeric(the.physical.map.of.SNPs$pos) <= this.bp.stop))
+    }else{
+      these.col.numbers.part.1 <- which((as.numeric(the.physical.map.of.SNPs$chr)==this.chr.start)
+                                        & (as.numeric(the.physical.map.of.SNPs$pos) >= this.bp.start)) 
+      these.col.numbers.part.2 <- which((as.numeric(as.numeric(the.physical.map.of.SNPs$chr)==this.chr.stop)) 
+                                        & (as.numeric(the.physical.map.of.SNPs$pos) <= this.bp.stop)) 
+      these.col.numbers <- c(these.row.numbers.part.1, these.row.numbers.part.2)
+    }#end if(this.chr.start == this.chr.stop)
+    
+    #Add 1 to all column numbers because the first column of myG is the taxa namess
+    these.col.numbers <- these.col.numbers + 1
+    
+    # Append them to a list of positions (i.e. row numbers)
+    list.of.col.numbers <- c(list.of.col.numbers, these.col.numbers)
+  }#End for(j in 1:nrow(the.physical.map.of.QTLs))
   
+  
+  
+  
+  my.G.for.pipeline.core <- my.G.for.pipeline[,list.of.col.numbers]
+  
+  my.G.for.pipeline.peripheral <- my.G.for.pipeline[,-c(1,list.of.col.numbers)]
   
   
   #########################
@@ -69,13 +106,13 @@
   # an R workspace to save some time required to read in "large" files
   
   
-  dir.create("Results.multi.kernel.add.Test.20240326")
+  dir.create("Results.multi.kernel.add.Test.2024032")
   
   #Merge the genotypic data to the phenotypic data
   #####################Turn this into a function
   Y = my.Y.for.pipeline
   traitname = this.trait.name
-  path.for.results = "Results.multi.kernel.add.Test.20240326/"
+  path.for.results = "Results.multi.kernel.add.Test.20240327/"
   seed.number = 999
   
   

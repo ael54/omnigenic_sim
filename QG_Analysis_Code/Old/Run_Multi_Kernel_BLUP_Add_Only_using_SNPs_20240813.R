@@ -27,19 +27,19 @@
   this.trait.name <- colnames(my.Y.for.pipeline)[2]
   
   #Read in the genotypic data
-  my.G.validation <- data.frame(row.names(list.of.subpopulation.QTN[[this.validation.set]]),
-                                list.of.subpopulation.QTN[[this.validation.set]])
+  my.G.validation <- data.frame(row.names(list.of.subpopulation.SNPs[[this.validation.set]]),
+                                list.of.subpopulation.SNPs[[this.validation.set]])
   colnames(my.G.validation)[1] <- "taxa"
   
   if(length(this.training.set)==1){
-    my.G.training <- data.frame(row.names(list.of.subpopulation.QTN[[this.training.set]]),
-                                list.of.subpopulation.QTN[[this.training.set]])
+    my.G.training <- data.frame(row.names(list.of.subpopulation.SNPs[[this.training.set]]),
+                                list.of.subpopulation.SNPs[[this.training.set]])
     colnames(my.G.training)[1] <- "taxa"
   }else{
     counter <- 0
     for(j in this.training.set){
-      this.my.G.training <- data.frame(row.names(list.of.subpopulation.QTN[[j]]),
-                                       list.of.subpopulation.QTN[[j]])
+      this.my.G.training <- data.frame(row.names(list.of.subpopulation.SNPs[[j]]),
+                                       list.of.subpopulation.SNPs[[j]])
       colnames(this.my.G.training)[1] <- "taxa"
       if(counter == 0){
         my.G.training <- this.my.G.training
@@ -53,11 +53,49 @@
   
   
   my.G.for.pipeline <- rbind(my.G.validation, my.G.training)
-  my.G.for.pipeline.core <- my.G.for.pipeline[,which(colnames(my.G.for.pipeline) %in% 
-                                                           paste("X", four.traits.omni.core.peri.coreperi$core.genes$core.genes, sep = ""))]
   
-  my.G.for.pipeline.peripheral <- my.G.for.pipeline[,-c(1,which(colnames(my.G.for.pipeline) %in% 
-                                                           paste("X", four.traits.omni.core.peri.coreperi$core.genes$core.genes, sep = "")))]
+  #Obtain the row numbers of SNPs that are within 0.05 cM of each QTN
+  list.of.col.numbers <- NULL
+  for(j in 1:nrow(this.simulated.trait$core.genes)){
+    # Extract the chromosome and bp position of the start site
+    row.number.of.QTN <- which(the.physical.map.of.QTLs$id == this.simulated.trait$core.genes$core.genes[j])
+    this.chr.start <- as.numeric(the.physical.map.of.QTLs$chr[row.number.of.QTN])
+    this.bp.start <- the.physical.map.of.QTLs$pos[row.number.of.QTN] - 0.05
+    
+    # Extract the chromosome and bp position of the stop site
+    this.chr.stop <- as.numeric(the.physical.map.of.QTLs$chr[row.number.of.QTN])
+    this.bp.stop <- the.physical.map.of.QTLs$pos[row.number.of.QTN] + 0.05    
+    
+    #Identify the row numbers of the desired SNPs
+    
+    #In most cases the genomic region of interest will be on the same chromosome
+    # Therefore the following code will be used
+    if(this.chr.start == this.chr.stop){
+      these.col.numbers <- which((as.numeric(the.physical.map.of.SNPs$chr)==this.chr.start) 
+                                 & (as.numeric(the.physical.map.of.SNPs$pos) >= this.bp.start) 
+                                 & (as.numeric(the.physical.map.of.SNPs$chr)==this.chr.stop) 
+                                    & (as.numeric(the.physical.map.of.SNPs$pos) <= this.bp.stop))
+    }else{
+      these.col.numbers.part.1 <- which((as.numeric(the.physical.map.of.SNPs$chr)==this.chr.start)
+                                        & (as.numeric(the.physical.map.of.SNPs$pos) >= this.bp.start)) 
+      these.col.numbers.part.2 <- which((as.numeric(as.numeric(the.physical.map.of.SNPs$chr)==this.chr.stop)) 
+                                        & (as.numeric(the.physical.map.of.SNPs$pos) <= this.bp.stop)) 
+      these.col.numbers <- c(these.row.numbers.part.1, these.row.numbers.part.2)
+    }#end if(this.chr.start == this.chr.stop)
+    
+    #Add 1 to all column numbers because the first column of myG is the taxa namess
+    these.col.numbers <- these.col.numbers + 1
+    
+    # Append them to a list of positions (i.e. row numbers)
+    list.of.col.numbers <- c(list.of.col.numbers, these.col.numbers)
+  }#End for(j in 1:nrow(the.physical.map.of.QTLs))
+  
+  
+  
+  
+  my.G.for.pipeline.core <- my.G.for.pipeline[,list.of.col.numbers]
+  
+  my.G.for.pipeline.peripheral <- my.G.for.pipeline[,-c(1,list.of.col.numbers)]
   
   
   
@@ -69,13 +107,13 @@
   # an R workspace to save some time required to read in "large" files
   
   
-  dir.create("Results.multi.kernel.add.Test.20240326")
+  dir.create("Results.multi.kernel.add.Test.20240327")
   
   #Merge the genotypic data to the phenotypic data
   #####################Turn this into a function
   Y = my.Y.for.pipeline
   traitname = this.trait.name
-  path.for.results = "Results.multi.kernel.add.Test.20240326/"
+  path.for.results = "Results.multi.kernel.add.Test.20240327/"
   seed.number = 999
   
   
@@ -112,15 +150,8 @@
   A1.peripheral <- A.mat(G.peripheral)
   colnames(A1.peripheral) <- rownames(A1.peripheral) <- c(1:nrow(y))  
   
-  A1.core.core <- A1.core*A1.core
-  
-  A1.peripheral.peripheral <- A1.peripheral*A1.peripheral
-  
-  A1.core.peripheral <- A1.core*A1.peripheral
-  
   ############################################################################################
  
-
   
   sample.size <- nrow(y)
   
@@ -140,41 +171,28 @@
   #####data2 is for the double-kernel model. The additional columne, gid2 is needed
   #########so that we can distinguish between the random effects corresponding to 
   ########### each fo the two kernels
-  data2 <- data.frame(y=yNA,gid=1:length(y),gid2=1:length(y),gid3=1:length(y),
-                      gid4 = 1:length(y), gid5 = 1:length(y), cv = cv)
+  data2 <- data.frame(y=yNA,gid=1:length(y),gid2=1:length(y), cv = cv)
   the.cv.names <- NULL
   for(j in 1:ncol(cv)) the.cv.names <- c(the.cv.names, paste("CV_",j,sep = ""))
   
-  colnames(data2) <- c("y","gid", "gid2","gid3","gid4", "gid5", the.cv.names)
+  colnames(data2) <- c("y","gid", "gid2", the.cv.names)
   data2$gid <- as.character(data2$gid)
   data2$gid2 <- as.character(data2$gid2)
-  data2$gid3 <- as.character(data2$gid3)
-  data2$gid4 <- as.character(data2$gid4)
-  data2$gid5 <- as.character(data2$gid5)
-  
   
   rownames(A1.core) <- 1:nrow(A1.core)
   rownames(A1.peripheral) <- 1:nrow(A1.peripheral)
-  rownames(A1.core.core) <- 1:nrow(A1.core.core)
-  rownames(A1.peripheral.peripheral) <- 1:nrow(A1.peripheral.peripheral)
-  rownames(A1.core.peripheral) <- 1:nrow(A1.core.peripheral)
-  
+ 
   #Here is where the magic happens - this is where the two-kernel GS model is fitted
-  ans.multiple.kernel <- mmer(y~1, random = ~vsr(gid, Gu = A1.core)+vsr(gid2, Gu = A1.peripheral)
-                              +vsr(gid3, Gu = A1.core.core)+vsr(gid4, Gu = A1.peripheral.peripheral)
-                              +vsr(gid5, Gu = A1.core.peripheral),
+  ans.multiple.kernel <- mmer(y~1, random = ~vsr(gid, Gu = A1.core)+vsr(gid2, Gu = A1.peripheral),
                               data = data2, verbose = FALSE)
   GEBVs <- as.data.frame(ans.multiple.kernel$U$`u:gid`$y+
-                           ans.multiple.kernel$U$`u:gid2`$y+
-                           ans.multiple.kernel$U$`u:gid3`$y+
-                           ans.multiple.kernel$U$`u:gid4`$y+
-                           ans.multiple.kernel$U$`u:gid5`$y)
+                           ans.multiple.kernel$U$`u:gid2`$y)
   GEBVs  <- data.frame(as.numeric(rownames(GEBVs)), GEBVs )
   GEBVs <- GEBVs[order(GEBVs[,1]),]  
   
  
   #r.gy <- c(r.gy, cor(ans$g.pred,y[pred]))
-  r.gy.add.epi.mult.kern <- cor(GEBVs[pred,2], y[pred]) 
+  r.gy.add.mult.kern <- cor(GEBVs[pred,2], y[pred]) 
   
   
  #End rrblup.tenfoldCV

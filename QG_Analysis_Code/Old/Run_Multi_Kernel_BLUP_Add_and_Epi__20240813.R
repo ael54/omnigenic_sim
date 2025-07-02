@@ -54,10 +54,10 @@
   
   my.G.for.pipeline <- rbind(my.G.validation, my.G.training)
   my.G.for.pipeline.core <- my.G.for.pipeline[,which(colnames(my.G.for.pipeline) %in% 
-                                                           paste("X", four.traits.omni.core.peri.coreperi$core.genes$core.genes, sep = ""))]
+                                                           paste("X", this.simulated.trait$core.genes$core.genes, sep = ""))]
   
   my.G.for.pipeline.peripheral <- my.G.for.pipeline[,-c(1,which(colnames(my.G.for.pipeline) %in% 
-                                                           paste("X", four.traits.omni.core.peri.coreperi$core.genes$core.genes, sep = "")))]
+                                                           paste("X", this.simulated.trait$core.genes$core.genes, sep = "")))]
   
   
   

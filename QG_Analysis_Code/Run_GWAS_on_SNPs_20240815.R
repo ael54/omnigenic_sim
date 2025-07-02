@@ -6,7 +6,7 @@ list.of.subpopulation.traits <- list(directional.subpopulation.trait.10.pct, dir
                                      disruptive.subpopulation.trait.10.prev.gen,disruptive.subpopulation.trait.20.prev.gen,
                                      stabilizing.subpopulation.trait.10.prev.gen,stabilizing.subpopulation.trait.20.prev.gen)
 
-list.of.subpopulation.SNP <- list(directional.subpopulation.10.pct.SNPs, directional.subpopulation.20.pct.SNPs,
+list.of.subpopulation.SNPs <- list(directional.subpopulation.10.pct.SNPs, directional.subpopulation.20.pct.SNPs,
                                   disruptive.subpopulation.10.pct.SNPs, disruptive.subpopulation.20.pct.SNPs,
                                   stabilizing.subpopulation.10.pct.SNPs, stabilizing.subpopulation.20.pct.SNPs,
                                   directional.subpopulation.10.prev.gen.SNPs, directional.subpopulation.20.prev.gen.SNPs,
@@ -40,7 +40,7 @@ add.effect.estimates.peripheral.SNPs <- list(Directional.selection.10.pct = NA, 
 for(eye in 1:length(names.of.subpopulations)){
   this.myY <- data.frame(row.names(list.of.subpopulation.traits[[eye]]),
                          list.of.subpopulation.traits[[eye]])
-  this.myGD <- data.frame(row.names(list.of.subpopulation.SNP[[eye]]),list.of.subpopulation.SNP[[eye]]) #(genotypes)
+  this.myGD <- data.frame(row.names(list.of.subpopulation.SNPs[[eye]]),list.of.subpopulation.SNPs[[eye]]) #(genotypes)
   this.myGM <- data.frame(paste("X", the.physical.map.of.SNPs[,1],sep = ""),
                           the.physical.map.of.SNPs[,2],
                           the.physical.map.of.SNPs[,4])#(map locations)

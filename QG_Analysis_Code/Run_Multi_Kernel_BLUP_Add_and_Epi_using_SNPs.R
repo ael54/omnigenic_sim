@@ -56,9 +56,9 @@
   
   #Obtain the row numbers of SNPs that are within 0.05 cM of each QTN
   list.of.col.numbers <- NULL
-  for(j in 1:nrow(this.simulated.trait$core.genes)){
+  for(j in 1:nrow(four.traits.omni.core.peri.coreperi$core.genes)){
     # Extract the chromosome and bp position of the start site
-    row.number.of.QTN <- which(the.physical.map.of.QTLs$id == this.simulated.trait$core.genes$core.genes[j])
+    row.number.of.QTN <- which(the.physical.map.of.QTLs$id == four.traits.omni.core.peri.coreperi$core.genes$core.genes[j])
     this.chr.start <- as.numeric(the.physical.map.of.QTLs$chr[row.number.of.QTN])
     this.bp.start <- the.physical.map.of.QTLs$pos[row.number.of.QTN] - 0.05
     
