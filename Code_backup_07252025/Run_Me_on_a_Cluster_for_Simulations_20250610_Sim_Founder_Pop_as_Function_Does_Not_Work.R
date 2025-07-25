@@ -16,12 +16,12 @@ library(package = "simplePHENOTYPES")
 
 #Source in all files
 
-source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omni_Four_Trait_Trick.R")
-source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection.R")
-source("Simulating_Omnigenic_Genetic_Architecture/Obtain_Breeding_Values.R")
-source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omnigenic_Genetic_Architecture_as_a_Function.R")
+source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omni_Four_Trait_Trick_20240509.R")
+source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Multiple_Generations_of_Selection_20241216.R")
+source("Simulating_Omnigenic_Genetic_Architecture/Obtain_Breeding_Values_20240515.R")
+source("Simulating_Omnigenic_Genetic_Architecture/Simulate_Omnigenic_Genetic_Architecture_as_a_Function_20240219.R")
 source("Functions_to_Make_Life_Easier/get.me.my.SNPs.in.hapmap.format.R")
-source("Simulate_a_founder_Population_as_a_Function.R")
+source("Simulate_a_founder_Population_as_a_Function_20250610.R")
 
 #Simulate a founder population in AlphaSimR. This will take a long-ish time to run
 # e.g. - it should take about 30 minutes on my MacBook Pro
@@ -59,7 +59,7 @@ for(rep in 1:3){
                                                 "Factor.D.", el,
                                                 "Rep.", this.rep,
                                                 sep = "")
-           source("Master_Simulation_Script.R")
+           source("Master_Simulation_Script_20241216.R")
          }#End for(rep in 1:3)
       }#End for(el in 1:4)
     }#End for(k in 1:4)
